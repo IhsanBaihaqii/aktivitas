@@ -1,0 +1,3773 @@
+<!doctype html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Personal Productivity OS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      :root {
+        --bg: #0b0e11;
+        --panel: #161a1e;
+        --panel2: #1e2329;
+        --border: #2b3139;
+        --text: #eaecef;
+        --muted: #848e9c;
+        --up: #16a34a;
+        --down: #dc2626;
+        --accent: #f0b90b;
+        --blue: #3b82f6;
+        --purple: #a855f7;
+        --green: #10b981;
+        --cyan: #06b6d4;
+        --yellow: #eab308;
+        --orange: #f59e0b;
+        --red: #ef4444;
+        --lime: #84cc16;
+      }
+      html.light {
+        --bg: #f5f6f8;
+        --panel: #ffffff;
+        --panel2: #f2f4f7;
+        --border: #e3e6ea;
+        --text: #1e2329;
+        --muted: #707a8a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+      }
+      body {
+        font-family:
+          Inter,
+          ui-sans-serif,
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+      }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .card-pad {
+        padding: 12px;
+      }
+      .btn {
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        justify-content: center;
+      }
+      .btn:hover {
+        border-color: var(--muted);
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #000;
+        border-color: var(--accent);
+      }
+      .btn-primary:hover {
+        opacity: 0.9;
+      }
+      .btn-danger {
+        color: var(--down);
+        border-color: var(--down);
+      }
+      .btn-up {
+        background: var(--up);
+        color: #fff;
+        border-color: var(--up);
+      }
+      .btn-down {
+        background: var(--down);
+        color: #fff;
+        border-color: var(--down);
+      }
+      .btn-sm {
+        height: 24px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+      .input {
+        height: 32px;
+        padding: 0 8px;
+        font-size: 12px;
+        background: var(--panel2);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        outline: none;
+        width: 100%;
+      }
+      .input:focus {
+        border-color: var(--accent);
+      }
+      select.input {
+        cursor: pointer;
+      }
+      .label {
+        font-size: 10px;
+        color: var(--muted);
+        display: block;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        font-size: 13px;
+        color: var(--muted);
+        cursor: pointer;
+        border-left: 2px solid transparent;
+      }
+      .nav-item:hover {
+        background: var(--panel2);
+        color: var(--text);
+      }
+      .nav-item.active {
+        color: var(--accent);
+        background: var(--panel2);
+        border-left-color: var(--accent);
+      }
+      .nav-item i {
+        width: 16px;
+        text-align: center;
+      }
+      .hidden {
+        display: none !important;
+      }
+      .modal-bg {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.65);
+        z-index: 50;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+      }
+      .modal {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        overflow: auto;
+      }
+      .modal-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .modal-body {
+        padding: 16px;
+      }
+      .modal-footer {
+        padding: 12px 16px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .pill {
+        font-size: 10px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .scroll-x {
+        overflow-x: auto;
+      }
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 4px;
+      }
+      .hm-cell {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        background: var(--panel2);
+      }
+      .timeline-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+        font-size: 12px;
+      }
+      .timeline-bar {
+        height: 6px;
+        border-radius: 3px;
+        min-width: 2px;
+      }
+      .stat-val {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--panel2);
+        border: 1px solid var(--border);
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 12px;
+        z-index: 100;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      }
+      .toast.error {
+        border-color: var(--down);
+        color: var(--down);
+      }
+      .toast.success {
+        border-color: var(--up);
+        color: var(--up);
+      }
+      #sidebar {
+        width: 200px;
+        min-width: 200px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        border-right: 1px solid var(--border);
+        background: var(--panel);
+        overflow-y: auto;
+      }
+      @media (max-width: 768px) {
+        #sidebar {
+          position: fixed;
+          transform: translateX(-100%);
+          transition: 0.2s;
+          z-index: 40;
+        }
+        #sidebar.open {
+          transform: translateX(0);
+        }
+      }
+      .heatmap-grid {
+        display: grid;
+        grid-template-rows: repeat(7, 12px);
+        grid-auto-flow: column;
+        grid-auto-columns: 12px;
+        gap: 3px;
+      }
+      canvas {
+        max-width: 100%;
+      }
+      input[type="checkbox"] {
+        accent-color: var(--accent);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="flex">
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div
+          class="p-3 border-b border-[var(--border)] flex items-center gap-2"
+        >
+          <div
+            class="w-8 h-8 rounded bg-[var(--accent)] text-black grid place-items-center"
+          >
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold leading-tight">Productivity OS</div>
+            <div class="text-[10px] text-[var(--muted)] leading-tight">
+              Personal Terminal
+            </div>
+          </div>
+        </div>
+        <nav id="navList" class="py-2">
+          <div class="nav-item active" data-view="overview">
+            <i class="fa-solid fa-chart-line"></i><span>Overview</span>
+          </div>
+          <div class="nav-item" data-view="activity-center">
+            <i class="fa-solid fa-play-circle"></i><span>Activity Center</span>
+          </div>
+          <div class="nav-item" data-view="activity-manager">
+            <i class="fa-solid fa-list-check"></i><span>Activity Manager</span>
+          </div>
+          <div class="nav-item" data-view="habits">
+            <i class="fa-solid fa-repeat"></i><span>Habit Tracker</span>
+          </div>
+          <div class="nav-item" data-view="calendar">
+            <i class="fa-solid fa-calendar-days"></i><span>Calendar</span>
+          </div>
+          <div class="nav-item" data-view="analytics">
+            <i class="fa-solid fa-chart-pie"></i><span>Analytics</span>
+          </div>
+          <div class="nav-item" data-view="ai">
+            <i class="fa-solid fa-robot"></i><span>AI Analyst</span>
+          </div>
+          <div class="nav-item" data-view="reports">
+            <i class="fa-solid fa-file-lines"></i><span>Reports</span>
+          </div>
+          <div class="nav-item" data-view="settings">
+            <i class="fa-solid fa-gear"></i><span>Settings</span>
+          </div>
+        </nav>
+        <div
+          class="p-3 border-t border-[var(--border)] text-[10px] text-[var(--muted)]"
+        >
+          <div id="storageInfo">Storage: —</div>
+          <div class="mt-1">v1 · offline-first</div>
+        </div>
+      </aside>
+
+      <!-- Main -->
+      <main class="flex-1 min-w-0">
+        <!-- Top bar -->
+        <div
+          class="sticky top-0 z-30 bg-[var(--panel)] border-b border-[var(--border)] px-3 md:px-5 h-14 flex items-center gap-3"
+        >
+          <button id="btnMenu" class="md:hidden btn btn-sm">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="text-sm font-semibold" id="viewTitle">Overview</div>
+          <div class="ml-auto flex items-center gap-2">
+            <div
+              id="runningPill"
+              class="hidden pill"
+              style="border-color: var(--up); color: var(--up)"
+            >
+              <span
+                class="dot"
+                style="background: var(--up); animation: pulse 1.5s infinite"
+              ></span>
+              <span id="runningPillName">—</span>
+              <span id="runningPillTime" class="num">00:00:00</span>
+            </div>
+            <button id="btnQuickStart" class="btn btn-primary">
+              <i class="fa-solid fa-play"></i
+              ><span class="hidden sm:inline">Quick Start</span>
+            </button>
+            <button id="btnTheme" class="btn">
+              <i class="fa-solid fa-sun"></i>
+            </button>
+          </div>
+        </div>
+        <style>
+          @keyframes pulse {
+            0%,
+            100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.4;
+            }
+          }
+        </style>
+
+        <!-- Views -->
+        <div class="p-3 md:p-5">
+          <!-- OVERVIEW -->
+          <section data-view="overview">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">
+              <div class="card card-pad">
+                <div class="label">Produktif Hari Ini</div>
+                <div class="stat-val text-[var(--up)]" id="ovProdToday">
+                  0h 0m
+                </div>
+                <div
+                  class="text-[10px] text-[var(--muted)]"
+                  id="ovProdTodaySub"
+                >
+                  vs kemarin —
+                </div>
+              </div>
+              <div class="card card-pad">
+                <div class="label">Total Sesi</div>
+                <div class="stat-val num" id="ovSessions">0</div>
+                <div class="text-[10px] text-[var(--muted)]">Hari ini</div>
+              </div>
+              <div class="card card-pad">
+                <div class="label">Habit Selesai</div>
+                <div class="stat-val" id="ovHabits">0 / 0</div>
+                <div class="text-[10px] text-[var(--muted)]">Hari ini</div>
+              </div>
+              <div class="card card-pad">
+                <div class="label">Produktivitas Score</div>
+                <div class="stat-val text-[var(--accent)]" id="ovScore">—</div>
+                <div class="text-[10px] text-[var(--muted)]">
+                  0-100 hari ini
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 mb-3">
+              <div class="card card-pad lg:col-span-2">
+                <div class="flex justify-between items-center mb-2">
+                  <div class="text-xs font-semibold">
+                    <i
+                      class="fa-solid fa-chart-line text-[var(--accent)] mr-1"
+                    ></i
+                    >Productivity Trend (30 hari)
+                  </div>
+                  <div class="text-[10px] text-[var(--muted)]">
+                    Produktif vs Istirahat
+                  </div>
+                </div>
+                <div style="height: 200px">
+                  <canvas id="ovTrendChart"></canvas>
+                </div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-robot text-[var(--accent)] mr-1"></i>AI
+                  Insight
+                </div>
+                <div id="ovAIInsight" class="text-[11px] text-[var(--muted)]">
+                  Memuat...
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+              <div class="card card-pad lg:col-span-2">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-clock text-[var(--accent)] mr-1"></i
+                  >Today's Timeline
+                </div>
+                <div id="ovTimeline" class="text-[11px]"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-bullseye text-[var(--accent)] mr-1"></i
+                  >Quick Start
+                </div>
+                <div id="ovQuickStart" class="grid grid-cols-2 gap-1"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ACTIVITY CENTER -->
+          <section data-view="activity-center" class="hidden">
+            <div id="acCurrent" class="card card-pad mb-3"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+              <div class="card card-pad lg:col-span-2">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-clock text-[var(--accent)] mr-1"></i
+                  >Today's Timeline
+                </div>
+                <div id="acTimeline" class="text-[11px]"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-bolt text-[var(--accent)] mr-1"></i
+                  >Quick Start
+                </div>
+                <div id="acQuickStart" class="grid grid-cols-1 gap-1"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ACTIVITY MANAGER -->
+          <section data-view="activity-manager" class="hidden">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs font-semibold">
+                Activities (<span id="amCount">0</span>)
+              </div>
+              <button
+                class="btn btn-primary"
+                onclick="window.__app.openActivityModal()"
+              >
+                <i class="fa-solid fa-plus"></i> New Activity
+              </button>
+            </div>
+            <div class="card overflow-x-auto">
+              <table class="w-full text-xs">
+                <thead
+                  class="text-[10px] text-[var(--muted)] border-b border-[var(--border)]"
+                >
+                  <tr>
+                    <th class="text-left py-2 px-3">Aktivitas</th>
+                    <th class="text-left py-2 px-3">Kategori</th>
+                    <th class="text-left py-2 px-3">Tipe</th>
+                    <th class="text-left py-2 px-3">Target</th>
+                    <th class="text-left py-2 px-3">Produktif</th>
+                    <th class="text-left py-2 px-3">Status</th>
+                    <th class="py-2 px-3"></th>
+                  </tr>
+                </thead>
+                <tbody id="amTbody"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- HABITS -->
+          <section data-view="habits" class="hidden">
+            <div class="flex justify-between items-center mb-2">
+              <div class="text-xs font-semibold">
+                Habits (<span id="hbCount">0</span>)
+              </div>
+              <button
+                class="btn btn-primary"
+                onclick="window.__app.openHabitModal()"
+              >
+                <i class="fa-solid fa-plus"></i> New Habit
+              </button>
+            </div>
+            <div
+              id="hbList"
+              class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mb-3"
+            ></div>
+            <div class="card card-pad">
+              <div class="text-xs font-semibold mb-2">
+                <i class="fa-solid fa-fire text-[var(--accent)] mr-1"></i>Habit
+                Heatmap (12 minggu)
+              </div>
+              <div id="hbHeatmap" class="scroll-x"></div>
+            </div>
+          </section>
+
+          <!-- CALENDAR -->
+          <section data-view="calendar" class="hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-2">
+              <div class="card card-pad lg:col-span-2">
+                <div class="flex items-center gap-2 mb-2">
+                  <button
+                    class="btn btn-sm"
+                    onclick="window.__app.calMonth(-1)"
+                  >
+                    <i class="fa-solid fa-chevron-left"></i>
+                  </button>
+                  <div class="text-xs font-semibold" id="calTitle"></div>
+                  <button class="btn btn-sm" onclick="window.__app.calMonth(1)">
+                    <i class="fa-solid fa-chevron-right"></i>
+                  </button>
+                </div>
+                <div id="calGrid"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2" id="calDetailTitle">
+                  Pilih tanggal
+                </div>
+                <div
+                  id="calDetail"
+                  class="text-[11px] text-[var(--muted)]"
+                ></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ANALYTICS -->
+          <section data-view="analytics" class="hidden">
+            <div class="flex flex-wrap gap-1 mb-2" id="anFilters"></div>
+            <div
+              class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3"
+              id="anStats"
+            ></div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  Activity Distribution
+                </div>
+                <div style="height: 240px"><canvas id="anPie"></canvas></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  Category Comparison
+                </div>
+                <div style="height: 240px"><canvas id="anBar"></canvas></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  Productivity Trend & Candlestick (Cumulative)
+                </div>
+                <div class="flex gap-2 text-[10px] mb-1">
+                  <select
+                    id="anCandleTf"
+                    class="input"
+                    style="height: 24px; width: auto"
+                  >
+                    <option value="1D">1D</option>
+                    <option value="1W">1W</option>
+                    <option value="1M">1M</option>
+                    <option value="ALL">ALL</option>
+                  </select>
+                  <label class="flex items-center gap-1"
+                    ><input type="checkbox" id="anShowLine" checked />
+                    Line</label
+                  >
+                  <label class="flex items-center gap-1"
+                    ><input type="checkbox" id="anShowCandle" checked />
+                    Candle</label
+                  >
+                </div>
+                <div style="height: 240px"><canvas id="anCandle"></canvas></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  Hourly Productivity (0-23)
+                </div>
+                <div style="height: 240px"><canvas id="anHourly"></canvas></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- AI -->
+          <section data-view="ai" class="hidden">
+            <div class="card card-pad mb-2">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="text-xs font-semibold mr-auto">AI Controls</span>
+                <label class="flex items-center gap-1 text-[11px]"
+                  ><input type="checkbox" id="aiEnabled" /> AI Enabled</label
+                >
+                <label class="flex items-center gap-1 text-[11px]"
+                  ><input type="checkbox" id="aiAutoLearn" /> Auto Learn</label
+                >
+                <button class="btn btn-sm" id="aiTrain">Train Model</button>
+                <button class="btn btn-sm" id="aiReset">Reset Model</button>
+                <span class="pill" id="aiConfidence">—</span>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i
+                    class="fa-solid fa-wave-square text-[var(--accent)] mr-1"
+                  ></i
+                  >Productivity Patterns
+                </div>
+                <div id="aiPatterns" class="text-[11px] space-y-1"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-brain text-[var(--accent)] mr-1"></i
+                  >Predictions
+                </div>
+                <div id="aiPredictions" class="text-[11px] space-y-1"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i
+                    class="fa-solid fa-triangle-exclamation text-[var(--accent)] mr-1"
+                  ></i
+                  >Anomalies
+                </div>
+                <div id="aiAnomalies" class="text-[11px] space-y-1"></div>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">
+                  <i class="fa-solid fa-link text-[var(--accent)] mr-1"></i
+                  >Correlations
+                </div>
+                <div id="aiCorr" class="text-[11px] space-y-1"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- REPORTS -->
+          <section data-view="reports" class="hidden">
+            <div class="flex gap-1 mb-2" id="rpTabs"></div>
+            <div id="rpContent"></div>
+          </section>
+
+          <!-- SETTINGS -->
+          <section data-view="settings" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">Data Management</div>
+                <div class="flex flex-col gap-1">
+                  <button class="btn" id="setExport">
+                    <i class="fa-solid fa-download"></i> Export JSON
+                  </button>
+                  <button class="btn" id="setImport">
+                    <i class="fa-solid fa-upload"></i> Import JSON
+                  </button>
+                  <button class="btn" id="setBackup">
+                    <i class="fa-solid fa-box-archive"></i> Backup Now
+                  </button>
+                  <button class="btn btn-danger" id="setClear">
+                    <i class="fa-solid fa-trash"></i> Clear All Data
+                  </button>
+                </div>
+                <input
+                  type="file"
+                  id="setImportFile"
+                  accept="application/json"
+                  class="hidden"
+                />
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">Storage</div>
+                <div class="text-[11px] space-y-1" id="setStorage"></div>
+                <button class="btn btn-sm mt-2" id="setRefreshStorage">
+                  Refresh
+                </button>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">Preferences</div>
+                <label class="label">Sleep Activity</label>
+                <select class="input mb-2" id="setSleepActivity"></select>
+                <label class="label">Theme</label>
+                <select class="input" id="setTheme">
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                </select>
+              </div>
+              <div class="card card-pad">
+                <div class="text-xs font-semibold mb-2">Demo Data</div>
+                <p class="text-[11px] text-[var(--muted)] mb-2">
+                  Muat data sesi & habit contoh (data saat ini akan di-replace
+                  setelah konfirmasi).
+                </p>
+                <button class="btn" id="setDemo">
+                  <i class="fa-solid fa-flask"></i> Load Demo Data
+                </button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Activity Modal -->
+    <div class="modal-bg hidden" id="modalActivity">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="text-sm font-semibold" id="modalActivityTitle">
+            New Activity
+          </div>
+          <button
+            class="btn btn-sm"
+            onclick="window.__app.closeModal('modalActivity')"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body space-y-2">
+          <input type="hidden" id="actId" />
+          <div>
+            <label class="label">Nama *</label
+            ><input class="input" id="actName" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Kategori</label>
+              <select class="input" id="actCategory">
+                <option>Education</option>
+                <option>Development</option>
+                <option>Entertainment</option>
+                <option>Health</option>
+                <option>Work</option>
+                <option>Rest</option>
+                <option>Personal</option>
+                <option>Daily</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Tipe</label>
+              <select class="input" id="actType">
+                <option value="duration">Duration</option>
+                <option value="event">Event</option>
+                <option value="habit">Habit (manual count)</option>
+              </select>
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="label">Icon (fa-class)</label
+              ><input class="input" id="actIcon" placeholder="fa-code" />
+            </div>
+            <div>
+              <label class="label">Warna</label
+              ><input
+                type="color"
+                class="input"
+                id="actColor"
+                style="padding: 4px"
+              />
+            </div>
+            <div>
+              <label class="label">Target (menit)</label
+              ><input type="number" class="input" id="actTarget" value="0" />
+            </div>
+          </div>
+          <div>
+            <label class="label">Deskripsi</label
+            ><input class="input" id="actDesc" />
+          </div>
+          <div class="flex gap-3 text-[11px]">
+            <label class="flex items-center gap-1"
+              ><input type="checkbox" id="actProductive" /> Produktif</label
+            >
+            <label class="flex items-center gap-1"
+              ><input type="checkbox" id="actActive" checked /> Aktif</label
+            >
+          </div>
+          <p class="text-[10px] text-[var(--muted)]">
+            Tipe "Habit" membuat habit manual otomatis. Tidak menggunakan timer.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button
+            class="btn"
+            onclick="window.__app.closeModal('modalActivity')"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="window.__app.saveActivity()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Habit Modal -->
+    <div class="modal-bg hidden" id="modalHabit">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="text-sm font-semibold" id="modalHabitTitle">
+            New Habit
+          </div>
+          <button
+            class="btn btn-sm"
+            onclick="window.__app.closeModal('modalHabit')"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body space-y-2">
+          <input type="hidden" id="hbId" />
+          <div>
+            <label class="label">Nama *</label
+            ><input class="input" id="hbName" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Tipe</label>
+              <select class="input" id="hbType">
+                <option value="linked">Linked ke Activity (durasi)</option>
+                <option value="manual">Manual (hitung)</option>
+              </select>
+            </div>
+            <div>
+              <label class="label">Frekuensi</label>
+              <select class="input" id="hbFreq">
+                <option value="daily">Setiap hari</option>
+                <option value="weekly">Target mingguan</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="label">Activity (untuk linked)</label
+            ><select class="input" id="hbActivity"></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Target</label
+              ><input type="number" class="input" id="hbTarget" value="1" />
+            </div>
+            <div>
+              <label class="label">Satuan</label
+              ><input
+                class="input"
+                id="hbUnit"
+                placeholder="jam / gelas / kali"
+              />
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="label">Icon</label
+              ><input class="input" id="hbIcon" placeholder="fa-repeat" />
+            </div>
+            <div>
+              <label class="label">Warna</label
+              ><input
+                type="color"
+                class="input"
+                id="hbColor"
+                style="padding: 4px"
+              />
+            </div>
+          </div>
+          <p class="text-[10px] text-[var(--muted)]">
+            Linked: progress otomatis dari sesi activity. Manual: catat manual
+            via card habit.
+          </p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" onclick="window.__app.closeModal('modalHabit')">
+            Cancel
+          </button>
+          <button class="btn btn-primary" onclick="window.__app.saveHabit()">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Start Modal -->
+    <div class="modal-bg hidden" id="modalQuick">
+      <div class="modal">
+        <div class="modal-header">
+          <div class="text-sm font-semibold">Quick Start</div>
+          <button
+            class="btn btn-sm"
+            onclick="window.__app.closeModal('modalQuick')"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="modalQuickList" class="grid grid-cols-2 gap-2"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal-bg hidden" id="modalConfirm">
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-header">
+          <div class="text-sm font-semibold" id="confirmTitle">Confirm</div>
+          <button
+            class="btn btn-sm"
+            onclick="window.__app.closeModal('modalConfirm')"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="confirmMsg" class="text-xs"></div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" onclick="window.__app.closeModal('modalConfirm')">
+            Cancel
+          </button>
+          <button class="btn btn-danger" id="confirmOk">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        // ============ CONSTANTS ============
+        const STORAGE_KEY = "productivity_os_v1";
+        const SCHEMA_VERSION = 1;
+        const CATEGORY_COLORS = {
+          Education: "#3b82f6",
+          Development: "#10b981",
+          Entertainment: "#ef4444",
+          Health: "#22c55e",
+          Work: "#f59e0b",
+          Rest: "#a855f7",
+          Personal: "#eab308",
+          Daily: "#84cc16",
+          Other: "#6b7280",
+        };
+
+        const DEFAULT_ACTIVITIES = [
+          {
+            name: "Tidur",
+            category: "Rest",
+            icon: "fa-moon",
+            color: "#a855f7",
+            type: "duration",
+            productive: false,
+            targetMinutes: 480,
+            active: true,
+            description: "Waktu tidur",
+          },
+          {
+            name: "Bangun",
+            category: "Personal",
+            icon: "fa-sun",
+            color: "#eab308",
+            type: "event",
+            productive: false,
+            targetMinutes: 0,
+            active: true,
+            description: "Bangun tidur",
+          },
+          {
+            name: "Belajar",
+            category: "Education",
+            icon: "fa-book",
+            color: "#3b82f6",
+            type: "duration",
+            productive: true,
+            targetMinutes: 120,
+            active: true,
+            description: "Belajar",
+          },
+          {
+            name: "Kuliah",
+            category: "Education",
+            icon: "fa-graduation-cap",
+            color: "#3b82f6",
+            type: "duration",
+            productive: true,
+            targetMinutes: 120,
+            active: true,
+            description: "Kuliah",
+          },
+          {
+            name: "Programming",
+            category: "Development",
+            icon: "fa-code",
+            color: "#10b981",
+            type: "duration",
+            productive: true,
+            targetMinutes: 120,
+            active: true,
+            description: "Coding",
+          },
+          {
+            name: "Gaming",
+            category: "Entertainment",
+            icon: "fa-gamepad",
+            color: "#ef4444",
+            type: "duration",
+            productive: false,
+            targetMinutes: 60,
+            active: true,
+            description: "Main game",
+          },
+          {
+            name: "Makan",
+            category: "Daily",
+            icon: "fa-utensils",
+            color: "#84cc16",
+            type: "event",
+            productive: false,
+            targetMinutes: 0,
+            active: true,
+            description: "Makan",
+          },
+          {
+            name: "Olahraga",
+            category: "Health",
+            icon: "fa-dumbbell",
+            color: "#22c55e",
+            type: "duration",
+            productive: true,
+            targetMinutes: 30,
+            active: true,
+            description: "Olahraga",
+          },
+          {
+            name: "Membaca",
+            category: "Development",
+            icon: "fa-book-open",
+            color: "#06b6d4",
+            type: "duration",
+            productive: true,
+            targetMinutes: 30,
+            active: true,
+            description: "Baca buku",
+          },
+          {
+            name: "Bekerja",
+            category: "Work",
+            icon: "fa-briefcase",
+            color: "#f59e0b",
+            type: "duration",
+            productive: true,
+            targetMinutes: 0,
+            active: true,
+            description: "Bekerja",
+          },
+          {
+            name: "Istirahat",
+            category: "Rest",
+            icon: "fa-couch",
+            color: "#8b5cf6",
+            type: "duration",
+            productive: false,
+            targetMinutes: 0,
+            active: true,
+            description: "Istirahat",
+          },
+          {
+            name: "Ibadah",
+            category: "Personal",
+            icon: "fa-hands-praying",
+            color: "#eab308",
+            type: "duration",
+            productive: false,
+            targetMinutes: 0,
+            active: true,
+            description: "Ibadah",
+          },
+        ];
+
+        // ============ UTILITIES ============
+        const $ = (s, r = document) => r.querySelector(s);
+        const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+        const uid = (p) =>
+          (p || "id_") +
+          Date.now().toString(36) +
+          Math.random().toString(36).slice(2, 8);
+        const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+        const sum = (a) => a.reduce((x, y) => x + y, 0);
+        const avg = (a) => (a.length ? sum(a) / a.length : 0);
+        const stdev = (a) => {
+          if (a.length < 2) return 0;
+          const m = avg(a);
+          return Math.sqrt(sum(a.map((v) => (v - m) * (v - m))) / a.length);
+        };
+        const pad = (n) => String(n).padStart(2, "0");
+        const dayKey = (ts) => {
+          const d = new Date(ts);
+          return (
+            d.getFullYear() +
+            "-" +
+            pad(d.getMonth() + 1) +
+            "-" +
+            pad(d.getDate())
+          );
+        };
+        const startOfDay = (ts) => {
+          const d = new Date(ts);
+          d.setHours(0, 0, 0, 0);
+          return d.getTime();
+        };
+        const endOfDay = (ts) => startOfDay(ts) + 86400000 - 1;
+        const fmtHM = (ms) => {
+          ms = Math.max(0, ms);
+          const h = Math.floor(ms / 3600000),
+            m = Math.floor((ms % 3600000) / 60000);
+          return h + "h " + m + "m";
+        };
+        const fmtHMS = (ms) => {
+          ms = Math.max(0, ms);
+          const h = Math.floor(ms / 3600000),
+            m = Math.floor((ms % 3600000) / 60000),
+            s = Math.floor((ms % 60000) / 1000);
+          return pad(h) + ":" + pad(m) + ":" + pad(s);
+        };
+        const fmtTime = (ts) => {
+          const d = new Date(ts);
+          return pad(d.getHours()) + ":" + pad(d.getMinutes());
+        };
+        const fmtDate = (ts) => {
+          const d = new Date(ts);
+          return d.toLocaleDateString("id-ID", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          });
+        };
+        const cssVar = (n) =>
+          getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+        const safeParse = (s, f) => {
+          try {
+            return JSON.parse(s);
+          } catch (e) {
+            return f;
+          }
+        };
+
+        // ============ STATE ============
+        function freshState() {
+          return {
+            schemaVersion: SCHEMA_VERSION,
+            activities: DEFAULT_ACTIVITIES.map((a) =>
+              Object.assign({ id: uid("act_") }, a),
+            ),
+            sessions: [],
+            habits: [],
+            habitLogs: {},
+            goals: [],
+            settings: {
+              theme: "dark",
+              aiEnabled: true,
+              aiAutoLearn: true,
+              sleepActivityId: null,
+              chartCandleTf: "1W",
+              analyticsPreset: "last7",
+            },
+            learning: { params: null, trainedAt: null },
+          };
+        }
+        let state = freshState();
+        let currentView = "overview";
+        let tickHandle = null;
+        let charts = {}; // named chart instances
+        let pendingConfirm = null;
+        let calCurrent = new Date();
+
+        // ============ STORAGE ============
+        function saveState() {
+          try {
+            state.schemaVersion = SCHEMA_VERSION;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            updateStorageInfo();
+          } catch (e) {
+            toast("Save failed: " + e.message, "error");
+          }
+        }
+        function loadState() {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return;
+          const parsed = safeParse(raw, null);
+          if (!parsed) {
+            toast("Corrupt data in storage", "error");
+            return;
+          }
+          state = migrate(parsed);
+        }
+        function migrate(data) {
+          const out = freshState();
+          if (Array.isArray(data.activities))
+            out.activities = data.activities.map((a) => ({
+              id: String(a.id || uid("act_")),
+              name: String(a.name || "Activity"),
+              category: String(a.category || "Other"),
+              icon: String(a.icon || "fa-circle"),
+              color: String(a.color || "#6b7280"),
+              type: ["duration", "event", "habit"].includes(a.type)
+                ? a.type
+                : "duration",
+              productive: !!a.productive,
+              targetMinutes: Math.max(0, Number(a.targetMinutes) || 0),
+              active: a.active !== false,
+              description: String(a.description || ""),
+            }));
+          if (Array.isArray(data.sessions))
+            out.sessions = data.sessions.map((s) => ({
+              id: String(s.id || uid("ses_")),
+              activityId: String(s.activityId || ""),
+              startTime: Number(s.startTime) || Date.now(),
+              endTime: s.endTime ? Number(s.endTime) : null,
+              status: ["running", "paused", "completed"].includes(s.status)
+                ? s.status
+                : "completed",
+              pausedDurationSeconds: Math.max(
+                0,
+                Number(s.pausedDurationSeconds) || 0,
+              ),
+              pausedAt: s.pausedAt ? Number(s.pausedAt) : null,
+              note: String(s.note || ""),
+              createdAt: Number(s.createdAt) || Date.now(),
+            }));
+          if (Array.isArray(data.habits))
+            out.habits = data.habits.map((h) => ({
+              id: String(h.id || uid("hb_")),
+              name: String(h.name || "Habit"),
+              type: ["linked", "manual"].includes(h.type) ? h.type : "manual",
+              linkedActivityId: h.linkedActivityId
+                ? String(h.linkedActivityId)
+                : null,
+              target: Math.max(0.01, Number(h.target) || 1),
+              unit: String(h.unit || ""),
+              frequency: ["daily", "weekly"].includes(h.frequency)
+                ? h.frequency
+                : "daily",
+              icon: String(h.icon || "fa-repeat"),
+              color: String(h.color || "#3b82f6"),
+              active: h.active !== false,
+              startDate: Number(h.startDate) || Date.now(),
+            }));
+          if (data.habitLogs && typeof data.habitLogs === "object")
+            out.habitLogs = data.habitLogs;
+          if (Array.isArray(data.goals)) out.goals = data.goals;
+          if (data.settings)
+            out.settings = Object.assign(out.settings, data.settings);
+          if (data.learning)
+            out.learning = Object.assign(out.learning, data.learning);
+          return out;
+        }
+        function updateStorageInfo() {
+          try {
+            const bytes = new Blob([JSON.stringify(state)]).size;
+            const info =
+              bytes + " bytes (" + (bytes / 1024).toFixed(1) + " KB)";
+            const el = $("#storageInfo");
+            if (el) el.textContent = "Storage: " + info;
+            const sel = $("#setStorage");
+            if (sel)
+              sel.innerHTML =
+                "<div>Ukuran: <b>" +
+                info +
+                "</b></div>" +
+                "<div>Sessions: <b>" +
+                state.sessions.length +
+                "</b></div>" +
+                "<div>Activities: <b>" +
+                state.activities.length +
+                "</b></div>" +
+                "<div>Habits: <b>" +
+                state.habits.length +
+                "</b></div>" +
+                "<div>Schema: <b>v" +
+                state.schemaVersion +
+                "</b></div>" +
+                (bytes > 3.5 * 1024 * 1024
+                  ? '<div class="text-[var(--down)]">⚠ Mendekati batas LocalStorage (~5MB)</div>'
+                  : "");
+          } catch (e) {}
+        }
+
+        // ============ ACTIVITY CRUD ============
+        function getActivity(id) {
+          return state.activities.find((a) => a.id === id);
+        }
+        function activeActivities() {
+          return state.activities.filter((a) => a.active);
+        }
+        function openActivityModal(id) {
+          const a = id ? getActivity(id) : null;
+          $("#modalActivityTitle").textContent = a
+            ? "Edit Activity"
+            : "New Activity";
+          $("#actId").value = a ? a.id : "";
+          $("#actName").value = a ? a.name : "";
+          $("#actCategory").value = a ? a.category : "Education";
+          $("#actType").value = a ? a.type : "duration";
+          $("#actIcon").value = a ? a.icon : "fa-circle";
+          $("#actColor").value = a ? a.color : "#3b82f6";
+          $("#actTarget").value = a ? a.targetMinutes : 0;
+          $("#actDesc").value = a ? a.description : "";
+          $("#actProductive").checked = a ? a.productive : false;
+          $("#actActive").checked = a ? a.active : true;
+          showModal("modalActivity");
+        }
+        function saveActivity() {
+          const id = $("#actId").value;
+          const name = $("#actName").value.trim();
+          if (!name) {
+            toast("Name is required", "error");
+            return;
+          }
+          const data = {
+            name,
+            category: $("#actCategory").value,
+            type: $("#actType").value,
+            icon: $("#actIcon").value.trim() || "fa-circle",
+            color: $("#actColor").value,
+            targetMinutes: Math.max(
+              0,
+              parseInt($("#actTarget").value, 10) || 0,
+            ),
+            description: $("#actDesc").value.trim(),
+            productive: $("#actProductive").checked,
+            active: $("#actActive").checked,
+          };
+          if (id) {
+            const a = getActivity(id);
+            if (a) Object.assign(a, data);
+          } else {
+            const newAct = Object.assign({ id: uid("act_") }, data);
+            state.activities.push(newAct);
+            // auto-create manual habit for type 'habit'
+            if (newAct.type === "habit") {
+              state.habits.push({
+                id: uid("hb_"),
+                name: newAct.name,
+                type: "manual",
+                linkedActivityId: null,
+                target: 1,
+                unit: "kali",
+                frequency: "daily",
+                icon: newAct.icon,
+                color: newAct.color,
+                active: true,
+                startDate: Date.now(),
+              });
+            }
+          }
+          saveState();
+          closeModal("modalActivity");
+          toast("Activity saved", "success");
+          rerenderAll();
+        }
+        function deleteActivity(id) {
+          const a = getActivity(id);
+          if (!a) return;
+          confirmAction(
+            "Delete Activity",
+            'Hapus "' + a.name + '"? Riwayat sesi TETAP disimpan.',
+            () => {
+              state.activities = state.activities.filter((x) => x.id !== id);
+              // also deactivate linked habits but keep them
+              state.habits.forEach((h) => {
+                if (h.linkedActivityId === id) h.active = false;
+              });
+              saveState();
+              rerenderAll();
+              toast("Activity deleted", "success");
+            },
+          );
+        }
+
+        // ============ SESSION TRACKER ============
+        function getActiveSession() {
+          return (
+            state.sessions.find(
+              (s) => s.status === "running" || s.status === "paused",
+            ) || null
+          );
+        }
+        function sessionActiveMs(s) {
+          if (!s) return 0;
+          if (s.status === "completed")
+            return Math.max(
+              0,
+              s.endTime - s.startTime - s.pausedDurationSeconds * 1000,
+            );
+          if (s.status === "paused")
+            return Math.max(
+              0,
+              s.pausedAt - s.startTime - s.pausedDurationSeconds * 1000,
+            );
+          return Math.max(
+            0,
+            Date.now() - s.startTime - s.pausedDurationSeconds * 1000,
+          );
+        }
+        function startSession(activityId) {
+          const activity = getActivity(activityId);
+          if (!activity) return;
+          if (activity.type === "habit") {
+            logHabitActivity(activity);
+            return;
+          }
+
+          const active = getActiveSession();
+          if (active) {
+            const cur = getActivity(active.activityId);
+            confirmAction(
+              "Activity running",
+              '"' +
+                (cur ? cur.name : "Current") +
+                '" masih berjalan. Selesaikan dan mulai "' +
+                activity.name +
+                '"?',
+              () => {
+                finishSession(active.id);
+                _actuallyStart(activityId);
+              },
+            );
+            return;
+          }
+          _actuallyStart(activityId);
+        }
+        function _actuallyStart(activityId) {
+          // Guard: only one running
+          const running = state.sessions.filter(
+            (s) => s.status === "running" || s.status === "paused",
+          );
+          running.forEach((s) => {
+            s.status = "completed";
+            s.endTime = s.pausedAt || Date.now();
+          });
+          const session = {
+            id: uid("ses_"),
+            activityId,
+            startTime: Date.now(),
+            endTime: null,
+            status: "running",
+            pausedDurationSeconds: 0,
+            pausedAt: null,
+            note: "",
+            createdAt: Date.now(),
+          };
+          state.sessions.push(session);
+          saveState();
+          rerenderAll();
+          toast("Started: " + getActivity(activityId).name, "success");
+        }
+        function pauseSession(id) {
+          const s = state.sessions.find((x) => x.id === id);
+          if (!s || s.status !== "running") return;
+          s.status = "paused";
+          s.pausedAt = Date.now();
+          saveState();
+          rerenderAll();
+          toast("Paused");
+        }
+        function resumeSession(id) {
+          const s = state.sessions.find((x) => x.id === id);
+          if (!s || s.status !== "paused") return;
+          const pauseMs = Date.now() - s.pausedAt;
+          s.pausedDurationSeconds += Math.floor(pauseMs / 1000);
+          s.pausedAt = null;
+          s.status = "running";
+          saveState();
+          rerenderAll();
+          toast("Resumed");
+        }
+        function finishSession(id) {
+          const s = state.sessions.find((x) => x.id === id);
+          if (!s) return;
+          if (s.status === "paused") {
+            // account for the paused period
+            s.pausedDurationSeconds += Math.floor(
+              (Date.now() - s.pausedAt) / 1000,
+            );
+            s.pausedAt = null;
+          }
+          s.endTime = Date.now();
+          s.status = "completed";
+          saveState();
+          rerenderAll();
+          toast(
+            "Finished: " + (getActivity(s.activityId) || {}).name,
+            "success",
+          );
+        }
+        function editSession(id) {
+          const s = state.sessions.find((x) => x.id === id);
+          if (!s) return;
+          const st = new Date(s.startTime);
+          const inp = prompt(
+            "Edit start time (YYYY-MM-DD HH:MM):",
+            st.getFullYear() +
+              "-" +
+              pad(st.getMonth() + 1) +
+              "-" +
+              pad(st.getDate()) +
+              " " +
+              pad(st.getHours()) +
+              ":" +
+              pad(st.getMinutes()),
+          );
+          if (!inp) return;
+          const m = inp.match(/^(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
+          if (!m) {
+            toast("Invalid format", "error");
+            return;
+          }
+          const newStart = new Date(
+            +m[1],
+            +m[2] - 1,
+            +m[3],
+            +m[4],
+            +m[5],
+          ).getTime();
+          if (newStart >= (s.endTime || Date.now())) {
+            toast("Start must be before end", "error");
+            return;
+          }
+          s.startTime = newStart;
+          saveState();
+          rerenderAll();
+          toast("Start time updated", "success");
+        }
+        function deleteSession(id) {
+          confirmAction(
+            "Delete Session",
+            "Hapus sesi ini dari riwayat?",
+            () => {
+              state.sessions = state.sessions.filter((s) => s.id !== id);
+              saveState();
+              rerenderAll();
+              toast("Session deleted", "success");
+            },
+          );
+        }
+        function logHabitActivity(activity) {
+          const habit = state.habits.find(
+            (h) => h.type === "manual" && h.name === activity.name,
+          );
+          if (!habit) {
+            toast("No linked habit for " + activity.name, "error");
+            return;
+          }
+          const key = dayKey(Date.now());
+          state.habitLogs[habit.id] = state.habitLogs[habit.id] || {};
+          state.habitLogs[habit.id][key] =
+            (state.habitLogs[habit.id][key] || 0) + 1;
+          saveState();
+          rerenderAll();
+          toast("+1 " + activity.name, "success");
+        }
+
+        // ============ HABIT MANAGER ============
+        function habitProgress(habit, dayTs = Date.now()) {
+          const dStart = startOfDay(dayTs),
+            dEnd = endOfDay(dayTs);
+          if (habit.type === "linked" && habit.linkedActivityId) {
+            const act = getActivity(habit.linkedActivityId);
+            if (!act) return 0;
+            let total = 0;
+            state.sessions.forEach((s) => {
+              if (s.activityId !== habit.linkedActivityId) return;
+              const sStart = s.startTime,
+                sEnd = s.endTime || Date.now();
+              const oStart = Math.max(sStart, dStart),
+                oEnd = Math.min(sEnd, dEnd);
+              if (oEnd <= oStart) return;
+              const totalMs = sEnd - sStart;
+              if (totalMs <= 0) return;
+              const activeMs = sessionActiveMs(s);
+              const ratio = activeMs / totalMs;
+              total += (oEnd - oStart) * ratio;
+            });
+            // target for linked is in HOURS if unit contains 'jam' or 'hour', else raw
+            const target = habit.target;
+            const unitLC = (habit.unit || "").toLowerCase();
+            if (
+              unitLC.includes("jam") ||
+              unitLC.includes("hour") ||
+              unitLC.includes("h")
+            ) {
+              return total / 3600000;
+            }
+            if (unitLC.includes("menit") || unitLC.includes("min")) {
+              return total / 60000;
+            }
+            return total / 3600000; // default hours
+          }
+          // manual
+          const logs = state.habitLogs[habit.id] || {};
+          return logs[dayKey(dayTs)] || 0;
+        }
+        function habitTarget(habit) {
+          if (habit.frequency === "weekly") return habit.target / 7; // daily approximation for display
+          return habit.target;
+        }
+        function habitPercent(habit, dayTs = Date.now()) {
+          const target = habit.type === "linked" ? habit.target : habit.target;
+          const prog = habitProgress(habit, dayTs);
+          return target > 0 ? clamp((prog / target) * 100, 0, 999) : 0;
+        }
+        function openHabitModal(id) {
+          const h = id ? state.habits.find((x) => x.id === id) : null;
+          $("#modalHabitTitle").textContent = h ? "Edit Habit" : "New Habit";
+          $("#hbId").value = h ? h.id : "";
+          $("#hbName").value = h ? h.name : "";
+          $("#hbType").value = h ? h.type : "linked";
+          $("#hbFreq").value = h ? h.frequency : "daily";
+          $("#hbTarget").value = h ? h.target : 1;
+          $("#hbUnit").value = h ? h.unit : "jam";
+          $("#hbIcon").value = h ? h.icon : "fa-repeat";
+          $("#hbColor").value = h ? h.color : "#3b82f6";
+          // populate activity select
+          const sel = $("#hbActivity");
+          sel.innerHTML =
+            '<option value="">— none —</option>' +
+            activeActivities()
+              .filter((a) => a.type === "duration")
+              .map(
+                (a) => '<option value="' + a.id + '">' + a.name + "</option>",
+              )
+              .join("");
+          sel.value = h && h.linkedActivityId ? h.linkedActivityId : "";
+          showModal("modalHabit");
+        }
+        function saveHabit() {
+          const id = $("#hbId").value;
+          const name = $("#hbName").value.trim();
+          if (!name) {
+            toast("Name required", "error");
+            return;
+          }
+          const type = $("#hbType").value;
+          const linkedActivityId =
+            type === "linked" ? $("#hbActivity").value || null : null;
+          if (type === "linked" && !linkedActivityId) {
+            toast("Select activity for linked habit", "error");
+            return;
+          }
+          const data = {
+            name,
+            type,
+            linkedActivityId,
+            target: Math.max(0.01, parseFloat($("#hbTarget").value) || 1),
+            unit: $("#hbUnit").value.trim(),
+            frequency: $("#hbFreq").value,
+            icon: $("#hbIcon").value.trim() || "fa-repeat",
+            color: $("#hbColor").value,
+            active: true,
+            startDate: Date.now(),
+          };
+          if (id) {
+            const h = state.habits.find((x) => x.id === id);
+            if (h) Object.assign(h, data);
+          } else {
+            state.habits.push(Object.assign({ id: uid("hb_") }, data));
+          }
+          saveState();
+          closeModal("modalHabit");
+          toast("Habit saved", "success");
+          rerenderAll();
+        }
+        function deleteHabit(id) {
+          confirmAction(
+            "Delete Habit",
+            "Hapus habit ini? Log historis TETAP tersimpan.",
+            () => {
+              state.habits = state.habits.filter((h) => h.id !== id);
+              saveState();
+              rerenderAll();
+              toast("Habit deleted", "success");
+            },
+          );
+        }
+        function logHabitManual(id, delta) {
+          const h = state.habits.find((x) => x.id === id);
+          if (!h || h.type !== "manual") return;
+          const key = dayKey(Date.now());
+          state.habitLogs[h.id] = state.habitLogs[h.id] || {};
+          const cur = state.habitLogs[h.id][key] || 0;
+          state.habitLogs[h.id][key] = Math.max(0, cur + delta);
+          saveState();
+          rerenderAll();
+          toast(
+            "Logged " + (delta > 0 ? "+" : "") + delta + " " + (h.unit || ""),
+            "success",
+          );
+        }
+
+        // ============ ANALYTICS ============
+        function presetRange(preset) {
+          const now = Date.now();
+          const today = startOfDay(now);
+          switch (preset) {
+            case "today":
+              return [today, now];
+            case "yesterday":
+              return [today - 86400000, today - 1];
+            case "last7":
+              return [today - 6 * 86400000, now];
+            case "last30":
+              return [today - 29 * 86400000, now];
+            case "thisMonth": {
+              const d = new Date(now);
+              d.setDate(1);
+              d.setHours(0, 0, 0, 0);
+              return [d.getTime(), now];
+            }
+            case "lastMonth": {
+              const d = new Date(now);
+              d.setMonth(d.getMonth() - 1);
+              d.setDate(1);
+              d.setHours(0, 0, 0, 0);
+              const e = new Date(now);
+              e.setDate(1);
+              e.setHours(0, 0, 0, 0);
+              return [d.getTime(), e.getTime() - 1];
+            }
+            case "all":
+              return [0, now];
+            default:
+              return [today - 6 * 86400000, now];
+          }
+        }
+        function getSessionsInRange(start, end) {
+          return state.sessions.filter((s) => {
+            const sEnd = s.endTime || Date.now();
+            return (
+              s.startTime <= end && sEnd >= start && s.status !== "cancelled"
+            );
+          });
+        }
+        function sessionMsInRange(s, start, end) {
+          const sStart = s.startTime,
+            sEnd = s.endTime || Date.now();
+          const oStart = Math.max(sStart, start),
+            oEnd = Math.min(sEnd, end);
+          if (oEnd <= oStart) return 0;
+          const totalMs = sEnd - sStart;
+          if (totalMs <= 0) return 0;
+          const activeMs = sessionActiveMs(s);
+          return (oEnd - oStart) * (activeMs / totalMs);
+        }
+        function aggregateRange(start, end) {
+          const sessions = getSessionsInRange(start, end);
+          const byCategory = {};
+          const byActivity = {};
+          let productiveMs = 0,
+            restMs = 0,
+            entertainmentMs = 0,
+            educationMs = 0,
+            totalMs = 0;
+          sessions.forEach((s) => {
+            const act = getActivity(s.activityId);
+            const ms = sessionMsInRange(s, start, end);
+            if (ms <= 0) return;
+            totalMs += ms;
+            const cat = act ? act.category : "Other";
+            byCategory[cat] = (byCategory[cat] || 0) + ms;
+            byActivity[s.activityId] = (byActivity[s.activityId] || 0) + ms;
+            if (act && act.productive) productiveMs += ms;
+            if (cat === "Rest") restMs += ms;
+            if (cat === "Entertainment") entertainmentMs += ms;
+            if (cat === "Education") educationMs += ms;
+          });
+          const days = Math.max(1, Math.ceil((end - start) / 86400000));
+          return {
+            sessions,
+            byCategory,
+            byActivity,
+            productiveMs,
+            restMs,
+            entertainmentMs,
+            educationMs,
+            totalMs,
+            days,
+          };
+        }
+        function dailyProductiveMs(dateTs) {
+          const s = startOfDay(dateTs),
+            e = endOfDay(dateTs);
+          let prod = 0,
+            rest = 0,
+            ent = 0;
+          getSessionsInRange(s, e).forEach((se) => {
+            const act = getActivity(se.activityId);
+            const ms = sessionMsInRange(se, s, e);
+            if (ms <= 0 || !act) return;
+            if (act.productive) prod += ms;
+            if (act.category === "Rest") rest += ms;
+            if (act.category === "Entertainment") ent += ms;
+          });
+          return { prod, rest, ent };
+        }
+        function productivityScore(dayTs) {
+          const { prod, rest, ent } = dailyProductiveMs(dayTs);
+          const target = 4 * 3600000; // 4h productive = 100
+          let score = clamp((prod / target) * 100, 0, 100);
+          if (ent > 3 * 3600000) score *= 0.85;
+          if (rest < 5 * 3600000) score *= 0.9;
+          return Math.round(score);
+        }
+
+        // ============ AI ENGINE ============
+        function aiAnalyze() {
+          const enabled = state.settings.aiEnabled;
+          if (!enabled) return { disabled: true };
+          const now = Date.now();
+          const today = startOfDay(now);
+          // Build daily series for last 60 days
+          const series = [];
+          for (let i = 59; i >= 0; i--) {
+            const ts = today - i * 86400000;
+            const d = dailyProductiveMs(ts);
+            series.push({ ts, prod: d.prod, rest: d.rest, ent: d.ent });
+          }
+          const prodArr = series.map((x) => x.prod);
+          const nonZero = prodArr.filter((x) => x > 0);
+          const days = nonZero.length;
+          const conf = days >= 21 ? "High" : days >= 7 ? "Medium" : "Low";
+
+          // Pattern: most productive hour
+          const hourBuckets = Array(24).fill(0);
+          state.sessions.forEach((s) => {
+            const act = getActivity(s.activityId);
+            if (!act || !act.productive) return;
+            const sEnd = s.endTime || Date.now();
+            if (sEnd < today - 30 * 86400000) return;
+            // distribute over hours
+            for (
+              let h = new Date(s.startTime).getHours();
+              h <= new Date(sEnd).getHours() && h < 24;
+              h++
+            ) {
+              hourBuckets[h] += 60000; // rough contribution
+            }
+          });
+          const topHours = hourBuckets
+            .map((v, h) => ({ h, v }))
+            .sort((a, b) => b.v - a.v)
+            .slice(0, 2)
+            .map((x) => x.h)
+            .sort((a, b) => a - b);
+
+          // Most productive day of week
+          const dowBuckets = Array(7).fill(0),
+            dowCounts = Array(7).fill(0);
+          series.forEach((s) => {
+            const dow = new Date(s.ts).getDay();
+            dowBuckets[dow] += s.prod;
+            dowCounts[dow]++;
+          });
+          const dowAvg = dowBuckets.map((v, i) =>
+            dowCounts[i] ? v / dowCounts[i] : 0,
+          );
+          const bestDow = dowAvg.indexOf(Math.max(...dowAvg));
+
+          // EWMA prediction for next 7 days
+          let ewma = avg(prodArr.slice(-14));
+          const alpha = 0.35;
+          prodArr.slice(-30).forEach((v) => {
+            ewma = ewma * (1 - alpha) + v * alpha;
+          });
+          const predictions = [];
+          for (let i = 1; i <= 7; i++) {
+            predictions.push({ ts: today + i * 86400000, value: ewma });
+          }
+
+          // Anomalies (z-score on daily productive, |z|>2 in last 7 days)
+          const mean = avg(prodArr);
+          const sd = stdev(prodArr);
+          const anomalies = [];
+          series.slice(-7).forEach((s) => {
+            if (sd > 0) {
+              const z = (s.prod - mean) / sd;
+              if (z < -2)
+                anomalies.push({
+                  type: "low",
+                  date: s.ts,
+                  msg:
+                    "Produktivitas rendah: " +
+                    fmtHM(s.prod) +
+                    " (z=" +
+                    z.toFixed(1) +
+                    ")",
+                });
+              if (z > 2)
+                anomalies.push({
+                  type: "high",
+                  date: s.ts,
+                  msg:
+                    "Produktivitas tinggi: " +
+                    fmtHM(s.prod) +
+                    " (z=" +
+                    z.toFixed(1) +
+                    ")",
+                });
+            }
+          });
+          // Sleep anomaly
+          const sleepActId = state.settings.sleepActivityId;
+          if (sleepActId) {
+            const sleepSeries = [];
+            for (let i = 1; i <= 30; i++) {
+              const ts = today - i * 86400000;
+              let ms = 0;
+              getSessionsInRange(startOfDay(ts), endOfDay(ts)).forEach((s) => {
+                if (s.activityId === sleepActId)
+                  ms += sessionMsInRange(s, startOfDay(ts), endOfDay(ts));
+              });
+              if (ms > 0) sleepSeries.push(ms);
+            }
+            if (sleepSeries.length >= 5) {
+              const sm = avg(sleepSeries),
+                ssd = stdev(sleepSeries);
+              if (ssd > 0) {
+                const lastNight = sleepSeries[0];
+                const z = (lastNight - sm) / ssd;
+                if (Math.abs(z) > 2)
+                  anomalies.push({
+                    type: "sleep",
+                    date: today,
+                    msg:
+                      "Durasi tidur semalam " +
+                      fmtHM(lastNight) +
+                      " (z=" +
+                      z.toFixed(1) +
+                      " vs rata-rata " +
+                      fmtHM(sm) +
+                      ")",
+                  });
+              }
+            }
+          }
+
+          // Correlations (pearson)
+          function pearson(a, b) {
+            const n = Math.min(a.length, b.length);
+            if (n < 5) return null;
+            const xa = a.slice(0, n),
+              xb = b.slice(0, n);
+            const ma = avg(xa),
+              mb = avg(xb);
+            let num = 0,
+              da = 0,
+              db = 0;
+            for (let i = 0; i < n; i++) {
+              num += (xa[i] - ma) * (xb[i] - mb);
+              da += (xa[i] - ma) ** 2;
+              db += (xb[i] - mb) ** 2;
+            }
+            if (da === 0 || db === 0) return null;
+            return num / Math.sqrt(da * db);
+          }
+          const correlations = [];
+          // Sleep H-1 vs productive H
+          if (sleepActId) {
+            const sleepNext = [],
+              prodNext = [];
+            for (let i = 1; i < 50; i++) {
+              const ts = today - i * 86400000;
+              let sleepMs = 0;
+              getSessionsInRange(startOfDay(ts), endOfDay(ts)).forEach((s) => {
+                if (s.activityId === sleepActId)
+                  sleepMs += sessionMsInRange(s, startOfDay(ts), endOfDay(ts));
+              });
+              const prodMs = dailyProductiveMs(ts + 86400000).prod;
+              if (sleepMs > 0 && prodMs > 0) {
+                sleepNext.push(sleepMs);
+                prodNext.push(prodMs);
+              }
+            }
+            const r = pearson(sleepNext, prodNext);
+            if (r !== null) {
+              correlations.push({
+                label: "Tidur → produktivitas besok",
+                r,
+                desc:
+                  r > 0.4
+                    ? "Positive (tidur lebih lama → produktivitas naik)"
+                    : r < -0.4
+                      ? "Negative (tidur lebih lama → produktivitas turun)"
+                      : "Weak/negligible",
+              });
+            }
+          }
+          // Gaming vs Study (same day)
+          const gameActIds = state.activities
+            .filter((a) => a.category === "Entertainment")
+            .map((a) => a.id);
+          const studyActIds = state.activities
+            .filter((a) => a.category === "Education")
+            .map((a) => a.id);
+          if (gameActIds.length && studyActIds.length) {
+            const gArr = [],
+              sArr = [];
+            for (let i = 1; i < 50; i++) {
+              const ts = today - i * 86400000;
+              let g = 0,
+                st = 0;
+              getSessionsInRange(startOfDay(ts), endOfDay(ts)).forEach((s) => {
+                const ms = sessionMsInRange(s, startOfDay(ts), endOfDay(ts));
+                if (gameActIds.includes(s.activityId)) g += ms;
+                if (studyActIds.includes(s.activityId)) st += ms;
+              });
+              if (g > 0 || st > 0) {
+                gArr.push(g);
+                sArr.push(st);
+              }
+            }
+            const r = pearson(gArr, sArr);
+            if (r !== null) {
+              correlations.push({
+                label: "Gaming ↔ Belajar (hari sama)",
+                r,
+                desc:
+                  r < -0.3
+                    ? "Negative (gaming tinggi → belajar turun)"
+                    : r > 0.3
+                      ? "Positive"
+                      : "Weak/negligible",
+              });
+            }
+          }
+
+          return {
+            confidence: conf,
+            daysOfData: days,
+            topHours,
+            bestDow,
+            predictions,
+            anomalies,
+            correlations,
+            meanProd: mean,
+            ewma,
+            sdProd: sd,
+            lastTrainedAt: state.learning.trainedAt,
+          };
+        }
+        function trainModel() {
+          const a = aiAnalyze();
+          if (a.disabled) {
+            toast("AI disabled", "error");
+            return;
+          }
+          state.learning = {
+            params: {
+              ewma: a.ewma,
+              meanProd: a.meanProd,
+              sdProd: a.sdProd,
+              topHours: a.topHours,
+              bestDow: a.bestDow,
+            },
+            trainedAt: Date.now(),
+          };
+          saveState();
+          toast(
+            "Model trained on " + a.daysOfData + " days of data",
+            "success",
+          );
+          rerenderAll();
+        }
+        function resetModel() {
+          confirmAction(
+            "Reset Model",
+            "Reset AI model? Riwayat aktivitas TETAP tersimpan.",
+            () => {
+              state.learning = { params: null, trainedAt: null };
+              saveState();
+              rerenderAll();
+              toast("Model reset", "success");
+            },
+          );
+        }
+
+        // ============ CHART MANAGER ============
+        function destroyChart(name) {
+          if (charts[name]) {
+            charts[name].destroy();
+            delete charts[name];
+          }
+        }
+        function chartDefaults() {
+          return {
+            color: cssVar("--muted"),
+            borderColor: cssVar("--border"),
+            backgroundColor: cssVar("--panel2"),
+            font: { family: "Inter, system-ui, sans-serif", size: 10 },
+          };
+        }
+        function renderOvTrend() {
+          const el = $("#ovTrendChart");
+          if (!el) return;
+          destroyChart("ovTrend");
+          const now = Date.now();
+          const labels = [],
+            prodData = [],
+            restData = [];
+          for (let i = 29; i >= 0; i--) {
+            const ts = startOfDay(now) - i * 86400000;
+            labels.push(
+              new Date(ts).toLocaleDateString("id-ID", {
+                day: "2-digit",
+                month: "short",
+              }),
+            );
+            const d = dailyProductiveMs(ts);
+            prodData.push(d.prod / 3600000);
+            restData.push(d.rest / 3600000);
+          }
+          const d = chartDefaults();
+          charts.ovTrend = new Chart(el, {
+            type: "line",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Produktif (jam)",
+                  data: prodData,
+                  borderColor: "#16a34a",
+                  backgroundColor: "rgba(22,163,74,.1)",
+                  fill: true,
+                  tension: 0.3,
+                  pointRadius: 0,
+                  borderWidth: 2,
+                },
+                {
+                  label: "Istirahat (jam)",
+                  data: restData,
+                  borderColor: "#a855f7",
+                  backgroundColor: "rgba(168,85,247,.05)",
+                  fill: true,
+                  tension: 0.3,
+                  pointRadius: 0,
+                  borderWidth: 2,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: d.color, font: d.font } } },
+              scales: {
+                x: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+                y: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+              },
+            },
+          });
+        }
+        function renderAnPie() {
+          const el = $("#anPie");
+          if (!el) return;
+          destroyChart("anPie");
+          const preset = state.settings.analyticsPreset || "last7";
+          const [s, e] = presetRange(preset);
+          const agg = aggregateRange(s, e);
+          const labels = Object.keys(agg.byCategory);
+          const data = labels.map((k) => agg.byCategory[k] / 3600000);
+          const colors = labels.map((k) => CATEGORY_COLORS[k] || "#6b7280");
+          const d = chartDefaults();
+          charts.anPie = new Chart(el, {
+            type: "doughnut",
+            data: {
+              labels,
+              datasets: [
+                {
+                  data,
+                  backgroundColor: colors,
+                  borderWidth: 2,
+                  borderColor: cssVar("--panel"),
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "right",
+                  labels: { color: d.color, font: d.font },
+                },
+              },
+            },
+          });
+        }
+        function renderAnBar() {
+          const el = $("#anBar");
+          if (!el) return;
+          destroyChart("anBar");
+          const preset = state.settings.analyticsPreset || "last7";
+          const [s, e] = presetRange(preset);
+          const agg = aggregateRange(s, e);
+          const labels = Object.keys(agg.byCategory);
+          const data = labels.map((k) =>
+            (agg.byCategory[k] / 3600000).toFixed(1),
+          );
+          const colors = labels.map((k) => CATEGORY_COLORS[k] || "#6b7280");
+          const d = chartDefaults();
+          charts.anBar = new Chart(el, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Jam",
+                  data,
+                  backgroundColor: colors,
+                  borderWidth: 0,
+                  borderRadius: 4,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              indexAxis: "y",
+              plugins: { legend: { display: false } },
+              scales: {
+                x: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+                y: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+              },
+            },
+          });
+        }
+        function buildCandleBuckets(tf) {
+          const now = Date.now();
+          const today = startOfDay(now);
+          function bucket(ts) {
+            const d = new Date(ts);
+            switch (tf) {
+              case "1D": {
+                d.setHours(0, 0, 0, 0);
+                return d.getTime();
+              }
+              case "1W": {
+                d.setHours(0, 0, 0, 0);
+                const wd = (d.getDay() + 6) % 7;
+                d.setDate(d.getDate() - wd);
+                return d.getTime();
+              }
+              case "1M": {
+                d.setHours(0, 0, 0, 0);
+                d.setDate(1);
+                return d.getTime();
+              }
+              case "ALL": {
+                d.setHours(0, 0, 0, 0);
+                d.setDate(1);
+                return d.getTime();
+              }
+              default:
+                return ts;
+            }
+          }
+          // Build cumulative productive per bucket
+          const days = [];
+          const earliest = state.sessions.length
+            ? Math.min(...state.sessions.map((s) => s.startTime))
+            : today - 60 * 86400000;
+          for (let d = startOfDay(earliest); d <= today; d += 86400000)
+            days.push(d);
+          const bucketsMap = {};
+          days.forEach((d) => {
+            const k = bucket(d);
+            if (!bucketsMap[k])
+              bucketsMap[k] = {
+                open: 0,
+                high: 0,
+                low: 0,
+                close: 0,
+                ts: k,
+                cumulative: 0,
+              };
+          });
+          let cumulative = 0;
+          days.forEach((d) => {
+            const prod = dailyProductiveMs(d).prod;
+            cumulative += prod;
+            const k = bucket(d);
+            const b = bucketsMap[k];
+            if (b.open === 0) b.open = cumulative - prod;
+            if (cumulative > b.high) b.high = cumulative;
+            if (cumulative < b.low || b.low === 0) b.low = cumulative - prod;
+            b.close = cumulative;
+            b.cumulative = cumulative;
+          });
+          return Object.values(bucketsMap).sort((a, b) => a.ts - b.ts);
+        }
+        function renderAnCandle() {
+          const el = $("#anCandle");
+          if (!el) return;
+          destroyChart("anCandle");
+          const tf = $("#anCandleTf").value || "1W";
+          state.settings.chartCandleTf = tf;
+          const showLine = $("#anShowLine").checked;
+          const showCandle = $("#anShowCandle").checked;
+          const buckets = buildCandleBuckets(tf);
+          const labels = buckets.map((b) => {
+            const d = new Date(b.ts);
+            return d.toLocaleDateString("id-ID", {
+              day: "2-digit",
+              month: "short",
+            });
+          });
+          // floating bar: [low, high] in HOURS
+          const candleData = buckets.map((b) => [
+            b.low / 3600000,
+            b.high / 3600000,
+          ]);
+          const candleColors = buckets.map((b) =>
+            b.close >= b.open ? "rgba(22,163,74,.7)" : "rgba(220,38,38,.7)",
+          );
+          const lineData = buckets.map((b) => b.close / 3600000);
+          const d = chartDefaults();
+          const datasets = [];
+          if (showCandle) {
+            datasets.push({
+              type: "bar",
+              label: "OHLC range (jam)",
+              data: candleData,
+              backgroundColor: candleColors,
+              borderWidth: 0,
+              borderRadius: 2,
+            });
+          }
+          if (showLine) {
+            datasets.push({
+              type: "line",
+              label: "Cumulative (jam)",
+              data: lineData,
+              borderColor: "#3b82f6",
+              backgroundColor: "transparent",
+              borderWidth: 2,
+              pointRadius: 0,
+              tension: 0.2,
+            });
+          }
+          charts.anCandle = new Chart(el, {
+            data: { labels, datasets },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { labels: { color: d.color, font: d.font } } },
+              scales: {
+                x: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+                y: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+              },
+            },
+          });
+        }
+        function renderAnHourly() {
+          const el = $("#anHourly");
+          if (!el) return;
+          destroyChart("anHourly");
+          const preset = state.settings.analyticsPreset || "last7";
+          const [s, e] = presetRange(preset);
+          const sessions = getSessionsInRange(s, e);
+          const hours = Array(24).fill(0);
+          sessions.forEach((se) => {
+            const act = getActivity(se.activityId);
+            if (!act || !act.productive) return;
+            const sEnd = se.endTime || Date.now();
+            const sStart = Math.max(se.startTime, s);
+            const endT = Math.min(sEnd, e);
+            for (
+              let h = new Date(sStart).getHours();
+              h <= new Date(endT).getHours() && h < 24;
+              h++
+            ) {
+              const hourStart = startOfDay(sStart) + h * 3600000;
+              const hourEnd = hourStart + 3600000;
+              const oStart = Math.max(hourStart, sStart),
+                oEnd = Math.min(hourEnd, endT);
+              if (oEnd > oStart) hours[h] += oEnd - oStart;
+            }
+          });
+          const labels = hours.map((_, i) => pad(i) + ":00");
+          const data = hours.map((ms) => +(ms / 3600000).toFixed(2));
+          const colors = hours.map((v) =>
+            v > 0 ? "#16a34a" : cssVar("--panel2"),
+          );
+          const d = chartDefaults();
+          charts.anHourly = new Chart(el, {
+            type: "bar",
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: "Jam produktif",
+                  data,
+                  backgroundColor: colors,
+                  borderRadius: 3,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: { legend: { display: false } },
+              scales: {
+                x: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+                y: {
+                  ticks: { color: d.color, font: d.font },
+                  grid: { color: d.borderColor },
+                },
+              },
+            },
+          });
+        }
+
+        // ============ REPORTS ============
+        function renderReport(kind) {
+          const now = Date.now();
+          let start, end, title;
+          if (kind === "daily") {
+            start = startOfDay(now);
+            end = now;
+            title = "Daily Report — " + fmtDate(now);
+          } else if (kind === "weekly") {
+            start = startOfDay(now) - 6 * 86400000;
+            end = now;
+            title = "Weekly Report (7 hari)";
+          } else {
+            start = startOfDay(now) - 29 * 86400000;
+            end = now;
+            title = "Monthly Report (30 hari)";
+          }
+          const agg = aggregateRange(start, end);
+          const sessions = agg.sessions;
+          const topAct = Object.entries(agg.byActivity).sort(
+            (a, b) => b[1] - a[1],
+          )[0];
+          const topActName = topAct ? (getActivity(topAct[0]) || {}).name : "—";
+          const topActMs = topAct ? topAct[1] : 0;
+          const habitsDone = state.habits.filter(
+            (h) => h.active && habitPercent(h, now) >= 100,
+          ).length;
+          const habitsTotal = state.habits.filter((h) => h.active).length;
+          const ai = aiAnalyze();
+          let aiInsight = "—";
+          if (!ai.disabled) {
+            aiInsight =
+              "Total produktif " +
+              fmtHM(agg.productiveMs) +
+              " dalam " +
+              agg.days +
+              " hari. " +
+              "Rata-rata " +
+              fmtHM(agg.productiveMs / agg.days) +
+              "/hari. Confidence: " +
+              ai.confidence +
+              ".";
+          }
+          const rangeLabel =
+            "dari " + fmtDate(start) + " sampai " + fmtDate(end);
+          return (
+            '<div class="card card-pad">' +
+            '<h3 class="text-sm font-bold mb-2">' +
+            title +
+            "</h3>" +
+            '<div class="text-[10px] text-[var(--muted)] mb-3">' +
+            rangeLabel +
+            "</div>" +
+            '<div class="grid grid-cols-2 md:grid-cols-4 gap-2 mb-3">' +
+            '<div class="card card-pad"><div class="label">Produktif</div><div class="stat-val text-[var(--up)]">' +
+            fmtHM(agg.productiveMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Istirahat</div><div class="stat-val text-[var(--purple)]">' +
+            fmtHM(agg.restMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Hiburan</div><div class="stat-val text-[var(--red)]">' +
+            fmtHM(agg.entertainmentMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Sesi</div><div class="stat-val">' +
+            sessions.length +
+            "</div></div>" +
+            "</div>" +
+            '<div class="text-[11px] space-y-1">' +
+            "<div><b>Aktivitas terlama:</b> " +
+            topActName +
+            " (" +
+            fmtHM(topActMs) +
+            ")</div>" +
+            "<div><b>Habit tercapai:</b> " +
+            habitsDone +
+            " / " +
+            habitsTotal +
+            "</div>" +
+            "<div><b>AI Insight:</b> " +
+            aiInsight +
+            "</div>" +
+            "</div>" +
+            "</div>"
+          );
+        }
+
+        // ============ UI RENDERER ============
+        function setView(view) {
+          currentView = view;
+          $$("section[data-view]").forEach((el) =>
+            el.classList.toggle("hidden", el.dataset.view !== view),
+          );
+          $$(".nav-item").forEach((el) =>
+            el.classList.toggle("active", el.dataset.view === view),
+          );
+          const titles = {
+            overview: "Overview",
+            "activity-center": "Activity Center",
+            "activity-manager": "Activity Manager",
+            habits: "Habit Tracker",
+            calendar: "Calendar",
+            analytics: "Analytics",
+            ai: "AI Analyst",
+            reports: "Reports",
+            settings: "Settings",
+          };
+          $("#viewTitle").textContent = titles[view] || view;
+          if (window.innerWidth < 768) $("#sidebar").classList.remove("open");
+          renderView(view);
+        }
+        function renderView(view) {
+          switch (view) {
+            case "overview":
+              renderOverview();
+              break;
+            case "activity-center":
+              renderActivityCenter();
+              break;
+            case "activity-manager":
+              renderActivityManager();
+              break;
+            case "habits":
+              renderHabits();
+              break;
+            case "calendar":
+              renderCalendar();
+              break;
+            case "analytics":
+              renderAnalytics();
+              break;
+            case "ai":
+              renderAI();
+              break;
+            case "reports":
+              renderReportsView();
+              break;
+            case "settings":
+              renderSettings();
+              break;
+          }
+        }
+        function rerenderAll() {
+          renderRunningPill();
+          renderView(currentView);
+        }
+        function renderRunningPill() {
+          const active = getActiveSession();
+          const pill = $("#runningPill");
+          if (!active) {
+            pill.classList.add("hidden");
+            return;
+          }
+          const act = getActivity(active.activityId);
+          pill.classList.remove("hidden");
+          $("#runningPillName").textContent =
+            (act ? act.name : "—") +
+            (active.status === "paused" ? " (paused)" : "");
+          $("#runningPillTime").textContent = fmtHMS(sessionActiveMs(active));
+        }
+        function renderOverview() {
+          // Stats
+          const today = startOfDay(Date.now());
+          const prodToday = dailyProductiveMs(today).prod;
+          const prodYesterday = dailyProductiveMs(today - 86400000).prod;
+          const sessionsToday = getSessionsInRange(today, Date.now());
+          const habitsActive = state.habits.filter((h) => h.active);
+          const habitsDone = habitsActive.filter(
+            (h) => habitPercent(h, Date.now()) >= 100,
+          ).length;
+          const score = productivityScore(Date.now());
+          $("#ovProdToday").textContent = fmtHM(prodToday);
+          const delta = prodToday - prodYesterday;
+          $("#ovProdTodaySub").textContent =
+            (delta >= 0 ? "+" : "-") + fmtHM(Math.abs(delta)) + " vs kemarin";
+          $("#ovProdTodaySub").style.color =
+            delta >= 0 ? "var(--up)" : "var(--down)";
+          $("#ovSessions").textContent = sessionsToday.length;
+          $("#ovHabits").textContent = habitsDone + " / " + habitsActive.length;
+          $("#ovScore").textContent = score;
+
+          // AI insight
+          const ai = aiAnalyze();
+          if (ai.disabled) {
+            $("#ovAIInsight").innerHTML =
+              '<div class="text-[var(--muted)]">AI disabled. Enable di AI Analyst.</div>';
+          } else {
+            const lines = [];
+            if (ai.topHours.length)
+              lines.push(
+                "Jam paling produktif: <b>" +
+                  pad(ai.topHours[0]) +
+                  ":00-" +
+                  pad(ai.topHours[0] + 2) +
+                  ":00</b>",
+              );
+            const dowNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+            if (ai.bestDow >= 0)
+              lines.push(
+                "Hari paling produktif: <b>" + dowNames[ai.bestDow] + "</b>",
+              );
+            lines.push(
+              "Prediksi besok: <b>" +
+                fmtHM(ai.predictions[0]?.value || 0) +
+                "</b> produktif",
+            );
+            $("#ovAIInsight").innerHTML = lines
+              .map((l) => '<div class="mb-1">• ' + l + "</div>")
+              .join("");
+          }
+
+          // Timeline
+          renderTimeline("ovTimeline", today);
+          // Quick start
+          renderQuickStart("ovQuickStart");
+          renderOvTrend();
+        }
+        function renderTimeline(containerId, dayTs) {
+          const el = $("#" + containerId);
+          const dayStart = startOfDay(dayTs),
+            dayEnd = endOfDay(dayTs);
+          const sessions = getSessionsInRange(dayStart, dayEnd).sort(
+            (a, b) => a.startTime - b.startTime,
+          );
+          if (!sessions.length) {
+            el.innerHTML =
+              '<div class="text-[var(--muted)] p-2">Belum ada aktivitas.</div>';
+            return;
+          }
+          el.innerHTML = sessions
+            .map((s) => {
+              const act = getActivity(s.activityId);
+              const name = act ? act.name : "(deleted)";
+              const color = act ? act.color : "#6b7280";
+              const dur = sessionMsInRange(s, dayStart, dayEnd);
+              const startStr = fmtTime(Math.max(s.startTime, dayStart));
+              const endStr = s.endTime
+                ? fmtTime(Math.min(s.endTime, dayEnd))
+                : "running";
+              return (
+                '<div class="timeline-row">' +
+                '<span class="text-[var(--muted)] num" style="width:70px">' +
+                startStr +
+                "-" +
+                endStr +
+                "</span>" +
+                '<span class="dot" style="background:' +
+                color +
+                '"></span>' +
+                '<span class="flex-1">' +
+                name +
+                "</span>" +
+                '<span class="num">' +
+                (s.status === "running"
+                  ? '<i class="fa-solid fa-circle-play text-[var(--up)]"></i> '
+                  : "") +
+                fmtHM(dur) +
+                "</span>" +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+        function renderQuickStart(containerId) {
+          const el = $("#" + containerId);
+          const acts = activeActivities()
+            .filter((a) => a.type !== "habit")
+            .slice(0, 8);
+          el.innerHTML = acts
+            .map(
+              (a) =>
+                '<button class="btn btn-sm" style="border-color:' +
+                a.color +
+                '" onclick="window.__app.startSession(\'' +
+                a.id +
+                "')\">" +
+                '<i class="fa-solid ' +
+                a.icon +
+                '" style="color:' +
+                a.color +
+                '"></i> ' +
+                a.name +
+                "</button>",
+            )
+            .join("");
+        }
+        function renderActivityCenter() {
+          const active = getActiveSession();
+          const box = $("#acCurrent");
+          if (!active) {
+            box.innerHTML =
+              '<div class="flex items-center gap-3">' +
+              '<div class="w-10 h-10 rounded-full bg-[var(--panel2)] grid place-items-center"><i class="fa-solid fa-circle-pause text-[var(--muted)]"></i></div>' +
+              '<div><div class="text-sm font-semibold">Tidak ada aktivitas berjalan</div>' +
+              '<div class="text-[10px] text-[var(--muted)]">Pilih dari Quick Start</div></div>' +
+              "</div>";
+          } else {
+            const act = getActivity(active.activityId);
+            const name = act ? act.name : "Deleted";
+            const color = act ? act.color : "#6b7280";
+            const icon = act ? act.icon : "fa-circle";
+            const elapsed = sessionActiveMs(active);
+            box.innerHTML =
+              '<div class="flex items-center gap-3 flex-wrap">' +
+              '<div class="w-12 h-12 rounded-full grid place-items-center" style="background:' +
+              color +
+              "22; color:" +
+              color +
+              '">' +
+              '<i class="fa-solid ' +
+              icon +
+              ' text-lg"></i></div>' +
+              '<div class="min-w-0 flex-1">' +
+              '<div class="text-sm font-bold">' +
+              name +
+              "</div>" +
+              '<div class="text-[10px] text-[var(--muted)]">Mulai ' +
+              fmtTime(active.startTime) +
+              " · Status " +
+              active.status +
+              "</div>" +
+              "</div>" +
+              '<div class="text-right">' +
+              '<div class="text-2xl font-bold num" id="acTimer">' +
+              fmtHMS(elapsed) +
+              "</div>" +
+              '<div class="text-[10px] text-[var(--muted)]">' +
+              (active.status === "paused" ? "PAUSED" : "ACTIVE") +
+              "</div>" +
+              "</div>" +
+              '<div class="flex gap-1">' +
+              (active.status === "running"
+                ? '<button class="btn btn-sm" onclick="window.__app.pauseSession(\'' +
+                  active.id +
+                  '\')"><i class="fa-solid fa-pause"></i> Pause</button>'
+                : '<button class="btn btn-sm btn-up" onclick="window.__app.resumeSession(\'' +
+                  active.id +
+                  '\')"><i class="fa-solid fa-play"></i> Resume</button>') +
+              '<button class="btn btn-sm btn-danger" onclick="window.__app.finishSession(\'' +
+              active.id +
+              '\')"><i class="fa-solid fa-stop"></i> Finish</button>' +
+              '<button class="btn btn-sm" onclick="window.__app.editSession(\'' +
+              active.id +
+              '\')" title="Edit start"><i class="fa-solid fa-pen"></i></button>' +
+              "</div>" +
+              "</div>";
+          }
+          renderTimeline("acTimeline", Date.now());
+          renderQuickStart("acQuickStart");
+        }
+        function renderActivityManager() {
+          const tbody = $("#amTbody");
+          $("#amCount").textContent = state.activities.length;
+          tbody.innerHTML = state.activities
+            .map((a) => {
+              const target = a.targetMinutes
+                ? a.targetMinutes >= 60
+                  ? (a.targetMinutes / 60).toFixed(1) + "h"
+                  : a.targetMinutes + "m"
+                : "—";
+              return (
+                '<tr class="border-b border-[var(--border)]">' +
+                '<td class="py-2 px-3"><span class="dot mr-2" style="background:' +
+                a.color +
+                '"></span>' +
+                '<i class="fa-solid ' +
+                a.icon +
+                '" style="color:' +
+                a.color +
+                '"></i> ' +
+                a.name +
+                "</td>" +
+                '<td class="py-2 px-3 text-[var(--muted)]">' +
+                a.category +
+                "</td>" +
+                '<td class="py-2 px-3">' +
+                a.type +
+                "</td>" +
+                '<td class="py-2 px-3 num">' +
+                target +
+                "</td>" +
+                '<td class="py-2 px-3">' +
+                (a.productive
+                  ? '<span class="text-[var(--up)]">✓</span>'
+                  : "—") +
+                "</td>" +
+                '<td class="py-2 px-3">' +
+                (a.active
+                  ? '<span class="text-[var(--up)]">active</span>'
+                  : '<span class="text-[var(--muted)]">inactive</span>') +
+                "</td>" +
+                '<td class="py-2 px-3 text-right whitespace-nowrap">' +
+                '<button class="btn btn-sm mr-1" onclick="window.__app.openActivityModal(\'' +
+                a.id +
+                '\')"><i class="fa-solid fa-pen"></i></button>' +
+                '<button class="btn btn-sm btn-danger" onclick="window.__app.deleteActivity(\'' +
+                a.id +
+                '\')"><i class="fa-solid fa-trash"></i></button>' +
+                "</td></tr>"
+              );
+            })
+            .join("");
+        }
+        function renderHabits() {
+          $("#hbCount").textContent = state.habits.length;
+          const list = $("#hbList");
+          if (!state.habits.length) {
+            list.innerHTML =
+              '<div class="card card-pad col-span-full text-[var(--muted)] text-xs">Belum ada habit. Klik "New Habit".</div>';
+          } else {
+            list.innerHTML = state.habits
+              .map((h) => {
+                const pct = habitPercent(h, Date.now());
+                const prog = habitProgress(h, Date.now());
+                const unit = h.unit || (h.type === "linked" ? "jam" : "kali");
+                const target = h.target;
+                const achieved = pct >= 100;
+                const linked =
+                  h.type === "linked"
+                    ? (getActivity(h.linkedActivityId) || {}).name
+                    : "Manual";
+                return (
+                  '<div class="card card-pad">' +
+                  '<div class="flex items-center gap-2 mb-2">' +
+                  '<div class="w-8 h-8 rounded grid place-items-center" style="background:' +
+                  h.color +
+                  "22; color:" +
+                  h.color +
+                  '">' +
+                  '<i class="fa-solid ' +
+                  h.icon +
+                  '"></i></div>' +
+                  '<div class="flex-1 min-w-0"><div class="text-xs font-semibold truncate">' +
+                  h.name +
+                  "</div>" +
+                  '<div class="text-[10px] text-[var(--muted)]">' +
+                  linked +
+                  " · " +
+                  h.frequency +
+                  "</div></div>" +
+                  '<button class="btn btn-sm" onclick="window.__app.openHabitModal(\'' +
+                  h.id +
+                  '\')"><i class="fa-solid fa-pen"></i></button>' +
+                  '<button class="btn btn-sm btn-danger" onclick="window.__app.deleteHabit(\'' +
+                  h.id +
+                  '\')"><i class="fa-solid fa-trash"></i></button>' +
+                  "</div>" +
+                  '<div class="text-[10px] flex justify-between mb-1">' +
+                  '<span class="num">' +
+                  prog.toFixed(1) +
+                  " / " +
+                  target +
+                  " " +
+                  unit +
+                  "</span>" +
+                  '<span class="' +
+                  (achieved ? "text-[var(--up)]" : "text-[var(--muted)]") +
+                  '">' +
+                  pct.toFixed(0) +
+                  "%</span>" +
+                  "</div>" +
+                  '<div class="h-2 bg-[var(--panel2)] rounded overflow-hidden mb-2">' +
+                  '<div class="h-full" style="width:' +
+                  clamp(pct, 0, 100) +
+                  "%; background:" +
+                  (achieved ? "var(--up)" : h.color) +
+                  '"></div>' +
+                  "</div>" +
+                  (h.type === "manual"
+                    ? '<div class="flex gap-1"><button class="btn btn-sm flex-1" onclick="window.__app.logHabitManual(\'' +
+                      h.id +
+                      "',-1)\">−</button>" +
+                      '<button class="btn btn-sm btn-primary flex-1" onclick="window.__app.logHabitManual(\'' +
+                      h.id +
+                      "',1)\">+1</button></div>"
+                    : '<div class="text-[10px] text-[var(--muted)]">Progress otomatis dari sesi "' +
+                      linked +
+                      '"</div>') +
+                  "</div>"
+                );
+              })
+              .join("");
+          }
+          // heatmap - 84 days of habit completions (any active habit)
+          const heat = $("#hbHeatmap");
+          const today = startOfDay(Date.now());
+          let html = '<div class="heatmap-grid">';
+          for (let i = 83; i >= 0; i--) {
+            const ts = today - i * 86400000;
+            const active = state.habits.filter((h) => h.active);
+            const done = active.filter(
+              (h) => habitPercent(h, ts) >= 100,
+            ).length;
+            const ratio = active.length ? done / active.length : 0;
+            const bg =
+              ratio > 0
+                ? "rgba(22,163,74," + (0.15 + ratio * 0.85).toFixed(2) + ")"
+                : cssVar("--panel2");
+            const dStr = fmtDate(ts);
+            html +=
+              '<div class="hm-cell" style="background:' +
+              bg +
+              '" title="' +
+              dStr +
+              ": " +
+              done +
+              "/" +
+              active.length +
+              ' habit"></div>';
+          }
+          html += "</div>";
+          heat.innerHTML = html;
+        }
+        function renderCalendar() {
+          const y = calCurrent.getFullYear(),
+            m = calCurrent.getMonth();
+          $("#calTitle").textContent = new Date(y, m, 1).toLocaleDateString(
+            "id-ID",
+            { month: "long", year: "numeric" },
+          );
+          const first = new Date(y, m, 1);
+          const startOffset = (first.getDay() + 6) % 7; // Mon=0
+          const daysInMonth = new Date(y, m + 1, 0).getDate();
+          const cells = [];
+          for (let i = 0; i < startOffset; i++) cells.push(null);
+          for (let d = 1; d <= daysInMonth; d++) cells.push(new Date(y, m, d));
+          while (cells.length % 7 !== 0) cells.push(null);
+
+          let html = '<div class="grid grid-cols-7 gap-1 text-[10px] mb-1">';
+          ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"].forEach(
+            (d) =>
+              (html +=
+                '<div class="text-center text-[var(--muted)]">' + d + "</div>"),
+          );
+          html += '</div><div class="grid grid-cols-7 gap-1">';
+          cells.forEach((c) => {
+            if (!c) {
+              html += "<div></div>";
+              return;
+            }
+            const dayStart = startOfDay(c.getTime());
+            const sessions = getSessionsInRange(dayStart, endOfDay(dayStart));
+            const prod = dailyProductiveMs(dayStart).prod;
+            const isToday = dayKey(dayStart) === dayKey(Date.now());
+            const cats = {};
+            sessions.forEach((s) => {
+              const a = getActivity(s.activityId);
+              if (!a) return;
+              cats[a.category] = true;
+            });
+            const dotsHtml = Object.keys(cats)
+              .slice(0, 4)
+              .map(
+                (c) =>
+                  '<span class="dot" style="background:' +
+                  (CATEGORY_COLORS[c] || "#6b7280") +
+                  '"></span>',
+              )
+              .join("");
+            html +=
+              '<button class="card p-1.5 text-left min-h-[56px] ' +
+              (isToday ? "border-[var(--accent)]" : "") +
+              '" onclick="window.__app.calSelect(' +
+              dayStart +
+              ')">' +
+              '<div class="text-[11px] font-semibold">' +
+              c.getDate() +
+              "</div>" +
+              (prod > 0
+                ? '<div class="text-[9px] text-[var(--up)] num">' +
+                  fmtHM(prod) +
+                  "</div>"
+                : "") +
+              '<div class="flex gap-0.5 mt-1">' +
+              dotsHtml +
+              "</div>" +
+              "</button>";
+          });
+          html += "</div>";
+          $("#calGrid").innerHTML = html;
+        }
+        function calSelect(ts) {
+          const dayStart = startOfDay(ts);
+          const sessions = getSessionsInRange(
+            dayStart,
+            endOfDay(dayStart),
+          ).sort((a, b) => a.startTime - b.startTime);
+          $("#calDetailTitle").textContent = fmtDate(dayStart);
+          if (!sessions.length) {
+            $("#calDetail").innerHTML = "<div>Belum ada aktivitas.</div>";
+            return;
+          }
+          $("#calDetail").innerHTML = sessions
+            .map((s) => {
+              const a = getActivity(s.activityId);
+              const ms = sessionMsInRange(s, dayStart, endOfDay(dayStart));
+              return (
+                '<div class="mb-1.5">' +
+                '<span class="dot" style="background:' +
+                (a ? a.color : "#6b7280") +
+                '"></span> ' +
+                "<b>" +
+                (a ? a.name : "deleted") +
+                "</b><br>" +
+                '<span class="num text-[10px]">' +
+                fmtTime(s.startTime) +
+                "-" +
+                (s.endTime ? fmtTime(s.endTime) : "running") +
+                " · " +
+                fmtHM(ms) +
+                "</span>" +
+                "</div>"
+              );
+            })
+            .join("");
+        }
+        function renderAnalytics() {
+          // filter presets
+          const presets = [
+            { v: "today", l: "Today" },
+            { v: "yesterday", l: "Yesterday" },
+            { v: "last7", l: "Last 7 Days" },
+            { v: "last30", l: "Last 30 Days" },
+            { v: "thisMonth", l: "This Month" },
+            { v: "lastMonth", l: "Last Month" },
+            { v: "all", l: "All Time" },
+          ];
+          const cur = state.settings.analyticsPreset || "last7";
+          $("#anFilters").innerHTML = presets
+            .map(
+              (p) =>
+                '<button class="btn btn-sm ' +
+                (cur === p.v ? "btn-primary" : "") +
+                '" onclick="window.__app.setPreset(\'' +
+                p.v +
+                "')\">" +
+                p.l +
+                "</button>",
+            )
+            .join("");
+
+          // stats
+          const [s, e] = presetRange(cur);
+          const agg = aggregateRange(s, e);
+          $("#anStats").innerHTML =
+            '<div class="card card-pad"><div class="label">Total Produktif</div><div class="stat-val text-[var(--up)]">' +
+            fmtHM(agg.productiveMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Istirahat</div><div class="stat-val text-[var(--purple)]">' +
+            fmtHM(agg.restMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Belajar</div><div class="stat-val text-[var(--blue)]">' +
+            fmtHM(agg.educationMs) +
+            "</div></div>" +
+            '<div class="card card-pad"><div class="label">Hiburan</div><div class="stat-val text-[var(--red)]">' +
+            fmtHM(agg.entertainmentMs) +
+            "</div></div>";
+
+          renderAnPie();
+          renderAnBar();
+          renderAnCandle();
+          renderAnHourly();
+        }
+        function renderAI() {
+          const ai = aiAnalyze();
+          $("#aiEnabled").checked = !!state.settings.aiEnabled;
+          $("#aiAutoLearn").checked = !!state.settings.aiAutoLearn;
+          if (ai.disabled) {
+            $("#aiConfidence").textContent = "Disabled";
+            $("#aiPatterns").innerHTML =
+              '<div class="text-[var(--muted)]">AI dinonaktifkan. Aktifkan untuk analisis.</div>';
+            $("#aiPredictions").innerHTML = "";
+            $("#aiAnomalies").innerHTML = "";
+            $("#aiCorr").innerHTML = "";
+            return;
+          }
+          const confColors = {
+            High: "var(--up)",
+            Medium: "var(--accent)",
+            Low: "var(--down)",
+          };
+          $("#aiConfidence").textContent = ai.confidence;
+          $("#aiConfidence").style.color =
+            confColors[ai.confidence] || "var(--muted)";
+
+          const dowNames = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+          $("#aiPatterns").innerHTML =
+            "<div><b>Data:</b> " +
+            ai.daysOfData +
+            " hari produktif</div>" +
+            "<div><b>Jam paling produktif:</b> " +
+            (ai.topHours.length
+              ? ai.topHours.map((h) => pad(h) + ":00").join(", ")
+              : "—") +
+            "</div>" +
+            "<div><b>Hari paling produktif:</b> " +
+            (ai.bestDow >= 0 ? dowNames[ai.bestDow] : "—") +
+            "</div>" +
+            "<div><b>Rata-rata harian:</b> " +
+            fmtHM(ai.meanProd) +
+            "</div>";
+
+          $("#aiPredictions").innerHTML = ai.predictions.length
+            ? '<div class="mb-1 text-[10px] text-[var(--muted)]">7 hari ke depan (EWMA):</div>' +
+              ai.predictions
+                .map(
+                  (p) =>
+                    '<div class="flex justify-between"><span>' +
+                    fmtDate(p.ts) +
+                    '</span><span class="num text-[var(--accent)]">' +
+                    fmtHM(p.value) +
+                    "</span></div>",
+                )
+                .join("")
+            : '<div class="text-[var(--muted)]">Data belum cukup.</div>';
+
+          $("#aiAnomalies").innerHTML = ai.anomalies.length
+            ? ai.anomalies
+                .slice(0, 10)
+                .map(
+                  (a) =>
+                    '<div class="border-l-2 pl-2 mb-1" style="border-color:' +
+                    (a.type === "low" || a.type === "sleep"
+                      ? "var(--down)"
+                      : "var(--up)") +
+                    '">' +
+                    '<div class="text-[10px] text-[var(--muted)]">' +
+                    fmtDate(a.date) +
+                    "</div>" +
+                    "<div>" +
+                    a.msg +
+                    "</div></div>",
+                )
+                .join("")
+            : '<div class="text-[var(--muted)]"><i class="fa-solid fa-shield-halved mr-1 text-[var(--up)]"></i>Tidak ada anomali terdeteksi.</div>';
+
+          $("#aiCorr").innerHTML = ai.correlations.length
+            ? ai.correlations
+                .map((c) => {
+                  const color =
+                    c.r > 0.4
+                      ? "var(--up)"
+                      : c.r < -0.4
+                        ? "var(--down)"
+                        : "var(--muted)";
+                  return (
+                    '<div class="border-b border-[var(--border)] pb-1 mb-1">' +
+                    '<div class="flex justify-between"><span>' +
+                    c.label +
+                    '</span><span class="num" style="color:' +
+                    color +
+                    '">r=' +
+                    c.r.toFixed(2) +
+                    "</span></div>" +
+                    '<div class="text-[10px] text-[var(--muted)]">' +
+                    c.desc +
+                    "</div></div>"
+                  );
+                })
+                .join("")
+            : '<div class="text-[var(--muted)]">Data belum cukup untuk analisis korelasi.</div>';
+        }
+        function renderReportsView() {
+          $("#rpTabs").innerHTML = ["daily", "weekly", "monthly"]
+            .map(
+              (t) =>
+                '<button class="btn btn-sm ' +
+                (t === currentReport ? "btn-primary" : "") +
+                '" onclick="window.__app.setReport(\'' +
+                t +
+                "')\">" +
+                t.charAt(0).toUpperCase() +
+                t.slice(1) +
+                "</button>",
+            )
+            .join("");
+          $("#rpContent").innerHTML = renderReport(currentReport);
+        }
+        let currentReport = "daily";
+        function setReport(t) {
+          currentReport = t;
+          renderReportsView();
+        }
+        function renderSettings() {
+          // sleep activity select
+          const sel = $("#setSleepActivity");
+          const cur = state.settings.sleepActivityId || "";
+          sel.innerHTML =
+            '<option value="">— none —</option>' +
+            state.activities
+              .map(
+                (a) => '<option value="' + a.id + '">' + a.name + "</option>",
+              )
+              .join("");
+          sel.value = cur;
+          $("#setTheme").value = state.settings.theme || "dark";
+          updateStorageInfo();
+        }
+
+        // ============ MODALS & TOAST ============
+        function showModal(id) {
+          $("#" + id).classList.remove("hidden");
+        }
+        function closeModal(id) {
+          $("#" + id).classList.add("hidden");
+        }
+        function toast(msg, kind) {
+          const el = document.createElement("div");
+          el.className = "toast " + (kind || "");
+          el.textContent = msg;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 2400);
+        }
+        function confirmAction(title, msg, cb) {
+          $("#confirmTitle").textContent = title;
+          $("#confirmMsg").textContent = msg;
+          pendingConfirm = cb;
+          $("#confirmOk").onclick = () => {
+            closeModal("modalConfirm");
+            if (pendingConfirm) {
+              const fn = pendingConfirm;
+              pendingConfirm = null;
+              fn();
+            }
+          };
+          showModal("modalConfirm");
+        }
+
+        // ============ DATA MANAGEMENT ============
+        function exportJSON() {
+          const blob = new Blob([JSON.stringify(state, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download =
+            "productivity-os-" +
+            new Date().toISOString().slice(0, 10) +
+            ".json";
+          a.click();
+          URL.revokeObjectURL(url);
+          toast("Exported", "success");
+        }
+        function importJSON(file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const data = safeParse(reader.result, null);
+            if (!data || typeof data !== "object") {
+              toast("Invalid JSON", "error");
+              return;
+            }
+            if (typeof data.schemaVersion !== "number") {
+              toast("Missing schemaVersion", "error");
+              return;
+            }
+            if (
+              !Array.isArray(data.activities) ||
+              !Array.isArray(data.sessions)
+            ) {
+              toast("Invalid structure", "error");
+              return;
+            }
+            // Validate sessions
+            for (const s of data.sessions) {
+              if (!s.id || !s.activityId || !s.startTime || !s.status) {
+                toast("Invalid session record", "error");
+                return;
+              }
+              if (!["running", "paused", "completed"].includes(s.status)) {
+                toast("Invalid session status", "error");
+                return;
+              }
+            }
+            // Detect multiple running
+            const running = data.sessions.filter(
+              (s) => s.status === "running" || s.status === "paused",
+            );
+            const doImport = (keepId) => {
+              const migrated = migrate(data);
+              if (keepId !== undefined) {
+                migrated.sessions.forEach((s) => {
+                  if (
+                    (s.status === "running" || s.status === "paused") &&
+                    s.id !== keepId
+                  ) {
+                    s.status = "completed";
+                    s.endTime = s.pausedAt || s.startTime;
+                    s.pausedAt = null;
+                  }
+                });
+              }
+              // Backup current
+              const backupKey = STORAGE_KEY + "_backup_" + Date.now();
+              try {
+                localStorage.setItem(backupKey, JSON.stringify(state));
+              } catch (e) {}
+              state = migrated;
+              saveState();
+              rerenderAll();
+              toast("Import complete (backup di " + backupKey + ")", "success");
+            };
+            if (running.length > 1) {
+              // Build choices
+              const opts = running
+                .map((s) => {
+                  const a = data.activities.find((x) => x.id === s.activityId);
+                  return (
+                    '<button class="btn btn-sm w-full mb-1" onclick="window.__app.finishImport(\'' +
+                    s.id +
+                    "')\">" +
+                    "Keep: " +
+                    (a ? a.name : "Session") +
+                    " (" +
+                    fmtDate(s.startTime) +
+                    ")</button>"
+                  );
+                })
+                .join("");
+              $("#confirmTitle").textContent = "Multiple running sessions";
+              $("#confirmMsg").innerHTML =
+                "File berisi " +
+                running.length +
+                " sesi running. Pilih satu yang dipertahankan:<br><br>" +
+                opts +
+                '<button class="btn btn-sm w-full mt-2" onclick="window.__app.finishImport(null)">Cancel Import</button>';
+              $("#confirmOk").classList.add("hidden");
+              window.__app.finishImport = (keepId) => {
+                closeModal("modalConfirm");
+                $("#confirmOk").classList.remove("hidden");
+                if (keepId === null) {
+                  toast("Import cancelled");
+                  return;
+                }
+                doImport(keepId);
+              };
+              showModal("modalConfirm");
+              return;
+            }
+            doImport();
+          };
+          reader.readAsText(file);
+        }
+        function loadDemoData() {
+          confirmAction(
+            "Load Demo Data",
+            "Data saat ini akan diganti dengan data demo (setelah backup otomatis). Lanjutkan?",
+            () => {
+              const backupKey = STORAGE_KEY + "_backup_" + Date.now();
+              try {
+                localStorage.setItem(backupKey, JSON.stringify(state));
+              } catch (e) {}
+              const demo = freshState();
+              // Demo sessions
+              const progAct = demo.activities.find(
+                (a) => a.name === "Programming",
+              );
+              const belajarAct = demo.activities.find(
+                (a) => a.name === "Belajar",
+              );
+              const tidurAct = demo.activities.find((a) => a.name === "Tidur");
+              const olahragaAct = demo.activities.find(
+                (a) => a.name === "Olahraga",
+              );
+              const today = startOfDay(Date.now());
+              for (let i = 1; i <= 21; i++) {
+                const day = today - i * 86400000;
+                // sleep
+                const sleepStart = day + 22 * 3600000 - 86400000; // 22:00 prev day
+                demo.sessions.push({
+                  id: uid("ses_"),
+                  activityId: tidurAct.id,
+                  startTime: sleepStart,
+                  endTime: day + 6 * 3600000,
+                  status: "completed",
+                  pausedDurationSeconds: 0,
+                  pausedAt: null,
+                  note: "",
+                  createdAt: sleepStart,
+                });
+                // programming 1-3 hours
+                const progDur = (1 + Math.random() * 2) * 3600000;
+                demo.sessions.push({
+                  id: uid("ses_"),
+                  activityId: progAct.id,
+                  startTime: day + 9 * 3600000,
+                  endTime: day + 9 * 3600000 + progDur,
+                  status: "completed",
+                  pausedDurationSeconds: 0,
+                  pausedAt: null,
+                  note: "",
+                  createdAt: day + 9 * 3600000,
+                });
+                // study 0.5-2 hours
+                const stuDur = (0.5 + Math.random() * 1.5) * 3600000;
+                demo.sessions.push({
+                  id: uid("ses_"),
+                  activityId: belajarAct.id,
+                  startTime: day + 14 * 3600000,
+                  endTime: day + 14 * 3600000 + stuDur,
+                  status: "completed",
+                  pausedDurationSeconds: 0,
+                  pausedAt: null,
+                  note: "",
+                  createdAt: day + 14 * 3600000,
+                });
+                // olahraga alternate days
+                if (i % 2 === 0) {
+                  demo.sessions.push({
+                    id: uid("ses_"),
+                    activityId: olahragaAct.id,
+                    startTime: day + 17 * 3600000,
+                    endTime: day + 17.5 * 3600000,
+                    status: "completed",
+                    pausedDurationSeconds: 0,
+                    pausedAt: null,
+                    note: "",
+                    createdAt: day + 17 * 3600000,
+                  });
+                }
+              }
+              // Demo habits
+              demo.habits = [
+                {
+                  id: uid("hb_"),
+                  name: "Programming",
+                  type: "linked",
+                  linkedActivityId: progAct.id,
+                  target: 2,
+                  unit: "jam",
+                  frequency: "daily",
+                  icon: "fa-code",
+                  color: "#10b981",
+                  active: true,
+                  startDate: today - 21 * 86400000,
+                },
+                {
+                  id: uid("hb_"),
+                  name: "Belajar",
+                  type: "linked",
+                  linkedActivityId: belajarAct.id,
+                  target: 1,
+                  unit: "jam",
+                  frequency: "daily",
+                  icon: "fa-book",
+                  color: "#3b82f6",
+                  active: true,
+                  startDate: today - 21 * 86400000,
+                },
+                {
+                  id: uid("hb_"),
+                  name: "Olahraga",
+                  type: "linked",
+                  linkedActivityId: olahragaAct.id,
+                  target: 0.5,
+                  unit: "jam",
+                  frequency: "daily",
+                  icon: "fa-dumbbell",
+                  color: "#22c55e",
+                  active: true,
+                  startDate: today - 21 * 86400000,
+                },
+                {
+                  id: uid("hb_"),
+                  name: "Minum air",
+                  type: "manual",
+                  linkedActivityId: null,
+                  target: 8,
+                  unit: "gelas",
+                  frequency: "daily",
+                  icon: "fa-glass-water",
+                  color: "#06b6d4",
+                  active: true,
+                  startDate: today - 21 * 86400000,
+                },
+              ];
+              demo.settings.sleepActivityId = tidurAct.id;
+              state = demo;
+              saveState();
+              rerenderAll();
+              toast(
+                "Demo data loaded (backup di " + backupKey + ")",
+                "success",
+              );
+            },
+          );
+        }
+
+        // ============ INIT & EVENTS ============
+        function bindEvents() {
+          // nav
+          $("#navList").addEventListener("click", (e) => {
+            const item = e.target.closest(".nav-item");
+            if (item) setView(item.dataset.view);
+          });
+          $("#btnMenu").addEventListener("click", () =>
+            $("#sidebar").classList.toggle("open"),
+          );
+          $("#btnTheme").addEventListener("click", () => {
+            state.settings.theme =
+              state.settings.theme === "light" ? "dark" : "light";
+            document.documentElement.classList.toggle(
+              "light",
+              state.settings.theme === "light",
+            );
+            saveState();
+            rerenderAll();
+          });
+          $("#btnQuickStart").addEventListener("click", () => {
+            const list = $("#modalQuickList");
+            const acts = activeActivities();
+            list.innerHTML = acts
+              .map(
+                (a) =>
+                  '<button class="btn" style="border-color:' +
+                  a.color +
+                  "\" onclick=\"window.__app.closeModal('modalQuick');window.__app.startSession('" +
+                  a.id +
+                  "')\">" +
+                  '<i class="fa-solid ' +
+                  a.icon +
+                  '" style="color:' +
+                  a.color +
+                  '"></i> ' +
+                  a.name +
+                  "</button>",
+              )
+              .join("");
+            showModal("modalQuick");
+          });
+
+          // settings actions
+          document.addEventListener("click", (e) => {
+            const t = e.target.closest("button");
+            if (!t) return;
+            const id = t.id;
+            if (id === "setExport") exportJSON();
+            if (id === "setImport") $("#setImportFile").click();
+            if (id === "setBackup") {
+              exportJSON();
+              toast("Backup downloaded", "success");
+            }
+            if (id === "setClear") {
+              confirmAction(
+                "Clear All Data",
+                "Semua data akan dihapus. Backup otomatis akan dibuat dulu. Lanjutkan?",
+                () => {
+                  const backupKey = STORAGE_KEY + "_backup_" + Date.now();
+                  try {
+                    localStorage.setItem(backupKey, JSON.stringify(state));
+                  } catch (e) {}
+                  localStorage.removeItem(STORAGE_KEY);
+                  state = freshState();
+                  saveState();
+                  rerenderAll();
+                  toast("Data cleared (backup tersimpan)", "success");
+                },
+              );
+            }
+            if (id === "setRefreshStorage") updateStorageInfo();
+            if (id === "setDemo") loadDemoData();
+            if (id === "aiTrain") trainModel();
+            if (id === "aiReset") resetModel();
+          });
+          $("#setImportFile").addEventListener("change", (e) => {
+            const f = e.target.files[0];
+            if (f) importJSON(f);
+            e.target.value = "";
+          });
+          $("#setSleepActivity").addEventListener("change", (e) => {
+            state.settings.sleepActivityId = e.target.value || null;
+            saveState();
+            toast("Sleep activity saved", "success");
+          });
+          $("#setTheme").addEventListener("change", (e) => {
+            state.settings.theme = e.target.value;
+            document.documentElement.classList.toggle(
+              "light",
+              state.settings.theme === "light",
+            );
+            saveState();
+          });
+          $("#aiEnabled").addEventListener("change", (e) => {
+            state.settings.aiEnabled = e.target.checked;
+            saveState();
+            rerenderAll();
+          });
+          $("#aiAutoLearn").addEventListener("change", (e) => {
+            state.settings.aiAutoLearn = e.target.checked;
+            saveState();
+          });
+          // analytics controls
+          document.addEventListener("change", (e) => {
+            if (
+              e.target.id === "anCandleTf" ||
+              e.target.id === "anShowLine" ||
+              e.target.id === "anShowCandle"
+            ) {
+              renderAnCandle();
+            }
+          });
+          // close modals on backdrop
+          document.querySelectorAll(".modal-bg").forEach((m) => {
+            m.addEventListener("click", (e) => {
+              if (e.target === m) m.classList.add("hidden");
+            });
+          });
+        }
+
+        // tick timer for running session
+        function tick() {
+          const active = getActiveSession();
+          if (active) {
+            renderRunningPill();
+            const timer = $("#acTimer");
+            if (timer) timer.textContent = fmtHMS(sessionActiveMs(active));
+            // if we're on activity center, don't need to re-render everything
+          }
+        }
+
+        // expose API for inline onclick handlers
+        window.__app = {
+          startSession,
+          pauseSession,
+          resumeSession,
+          finishSession,
+          editSession,
+          deleteSession,
+          openActivityModal,
+          saveActivity,
+          deleteActivity,
+          openHabitModal,
+          saveHabit,
+          deleteHabit,
+          logHabitManual,
+          logHabitActivity,
+          closeModal,
+          showModal,
+          setPreset: (v) => {
+            state.settings.analyticsPreset = v;
+            saveState();
+            renderAnalytics();
+          },
+          setReport,
+          calMonth: (dir) => {
+            calCurrent.setMonth(calCurrent.getMonth() + dir);
+            renderCalendar();
+          },
+          calSelect,
+          finishImport: null,
+        };
+
+        // Init
+        loadState();
+        document.documentElement.classList.toggle(
+          "light",
+          state.settings.theme === "light",
+        );
+        bindEvents();
+        setView("overview");
+        setInterval(tick, 1000);
+        updateStorageInfo();
+      })();
+    </script>
+  </body>
+</html>
