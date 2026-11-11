@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "activities": [
+    {
+      "id": "act_mwc7pjx72ed508",
+      "name": "Tidur",
+      "category": "Rest",
+      "icon": "fa-moon",
+      "color": "#a855f7",
+      "type": "duration",
+      "productive": false,
+      "targetMinutes": 480,
+      "active": true,
+      "description": "Waktu tidur"
+    },
+    {
+      "id": "act_mwc7pjx7vbmwz5",
+      "name": "Bangun",
+      "category": "Personal",
+      "icon": "fa-sun",
+      "color": "#eab308",
+      "type": "event",
+      "productive": false,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Bangun tidur"
+    },
+    {
+      "id": "act_mwc7pjx7rb5fko",
+      "name": "Belajar",
+      "category": "Education",
+      "icon": "fa-book",
+      "color": "#3b82f6",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 120,
+      "active": true,
+      "description": "Belajar"
+    },
+    {
+      "id": "act_mwc7pjx7i1c26k",
+      "name": "Kuliah",
+      "category": "Education",
+      "icon": "fa-graduation-cap",
+      "color": "#3b82f6",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 120,
+      "active": true,
+      "description": "Kuliah"
+    },
+    {
+      "id": "act_mwc7pjx7daf6yg",
+      "name": "Programming",
+      "category": "Development",
+      "icon": "fa-code",
+      "color": "#10b981",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 120,
+      "active": true,
+      "description": "Coding"
+    },
+    {
+      "id": "act_mwc7pjx7yk13fc",
+      "name": "Gaming",
+      "category": "Entertainment",
+      "icon": "fa-gamepad",
+      "color": "#ef4444",
+      "type": "duration",
+      "productive": false,
+      "targetMinutes": 60,
+      "active": true,
+      "description": "Main game"
+    },
+    {
+      "id": "act_mwc7pjx7hdu0fr",
+      "name": "Makan",
+      "category": "Daily",
+      "icon": "fa-utensils",
+      "color": "#84cc16",
+      "type": "event",
+      "productive": false,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Makan"
+    },
+    {
+      "id": "act_mwc7pjx7lfucf4",
+      "name": "Olahraga",
+      "category": "Health",
+      "icon": "fa-dumbbell",
+      "color": "#22c55e",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 30,
+      "active": true,
+      "description": "Olahraga"
+    },
+    {
+      "id": "act_mwc7pjx7sia3yo",
+      "name": "Membaca",
+      "category": "Development",
+      "icon": "fa-book-open",
+      "color": "#06b6d4",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 30,
+      "active": true,
+      "description": "Baca buku"
+    },
+    {
+      "id": "act_mwc7pjx7arh1fz",
+      "name": "Bekerja",
+      "category": "Work",
+      "icon": "fa-briefcase",
+      "color": "#f59e0b",
+      "type": "duration",
+      "productive": true,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Bekerja"
+    },
+    {
+      "id": "act_mwc7pjx7h3u4q6",
+      "name": "Istirahat",
+      "category": "Rest",
+      "icon": "fa-couch",
+      "color": "#8b5cf6",
+      "type": "duration",
+      "productive": false,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Istirahat"
+    },
+    {
+      "id": "act_mwc7pjx7zsio8r",
+      "name": "Ibadah",
+      "category": "Personal",
+      "icon": "fa-hands-praying",
+      "color": "#eab308",
+      "type": "duration",
+      "productive": false,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Ibadah"
+    }
+  ],
+  "sessions": [
+    {
+      "id": "ses_mwc7q17sjirq0z",
+      "activityId": "act_mwc7pjx7daf6yg",
+      "startTime": 1794407210920,
+      "endTime": 1794407904602,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794407210920
+    }
+  ],
+  "habits": [],
+  "habitLogs": {},
+  "goals": [],
+  "settings": {
+    "theme": "dark",
+    "aiEnabled": true,
+    "aiAutoLearn": true,
+    "sleepActivityId": null,
+    "chartCandleTf": "1W",
+    "analyticsPreset": "last7"
+  },
+  "learning": {
+    "params": null,
+    "trainedAt": null
+  }
+}
