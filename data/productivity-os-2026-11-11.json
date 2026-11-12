@@ -144,6 +144,18 @@
       "targetMinutes": 0,
       "active": true,
       "description": "Ibadah"
+    },
+    {
+      "id": "act_mwc8n3simfeki8",
+      "name": "Nonton",
+      "category": "Rest",
+      "icon": "fa-film",
+      "color": "#ff00ff",
+      "type": "duration",
+      "productive": false,
+      "targetMinutes": 0,
+      "active": true,
+      "description": "Nonton sosmed"
     }
   ],
   "sessions": [
@@ -157,6 +169,83 @@
       "pausedAt": null,
       "note": "",
       "createdAt": 1794407210920
+    },
+    {
+      "id": "ses_mwc8ax7eybvmy3",
+      "activityId": "act_mwc7pjx7yk13fc",
+      "startTime": 1794408185498,
+      "endTime": 1794408782088,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794408185498
+    },
+    {
+      "id": "ses_mwc8nrj8oakqv7",
+      "activityId": "act_mwc8n3simfeki8",
+      "startTime": 1794408784676,
+      "endTime": 1794412386837,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794408784676
+    },
+    {
+      "id": "ses_mwcatni60wkp26",
+      "activityId": "act_mwc7pjx7daf6yg",
+      "startTime": 1794412418622,
+      "endTime": 1794416369850,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794412418622
+    },
+    {
+      "id": "ses_mwcd6jiabonryn",
+      "activityId": "act_mwc7pjx72ed508",
+      "startTime": 1794416379202,
+      "endTime": 1794436447991,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794416379202
+    },
+    {
+      "id": "ses_mwcpn119brsajp",
+      "activityId": "act_mwc7pjx7lfucf4",
+      "startTime": 1794437303805,
+      "endTime": 1794438252100,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794437303805
+    },
+    {
+      "id": "ses_mwcqt3xvvatrqz",
+      "activityId": "act_mwc7pjx7hdu0fr",
+      "startTime": 1794439267123,
+      "endTime": 1794440064853,
+      "status": "completed",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794439267123
+    },
+    {
+      "id": "ses_mwcwiewxab245b",
+      "activityId": "act_mwc7pjx7daf6yg",
+      "startTime": 1794448845825,
+      "endTime": null,
+      "status": "running",
+      "pausedDurationSeconds": 0,
+      "pausedAt": null,
+      "note": "",
+      "createdAt": 1794448845825
     }
   ],
   "habits": [],
@@ -167,11 +256,20 @@
     "aiEnabled": true,
     "aiAutoLearn": true,
     "sleepActivityId": null,
-    "chartCandleTf": "1W",
-    "analyticsPreset": "last7"
+    "chartCandleTf": "1D",
+    "analyticsPreset": "today"
   },
   "learning": {
-    "params": null,
-    "trainedAt": null
+    "params": {
+      "ewma": 1388621.2498401343,
+      "meanProd": 93220.08333333333,
+      "sdProd": 604883.6427904211,
+      "topHours": [
+        5,
+        6
+      ],
+      "bestDow": 3
+    },
+    "trainedAt": 1794445595758
   }
 }
